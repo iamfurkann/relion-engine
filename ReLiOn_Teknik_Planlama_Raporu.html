@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReLiOn Teknik Planlama Raporu</title>
+<style>
+:root {
+  --primary: #1a365d;
+  --primary-light: #2c5282;
+  --accent: #2b6cb0;
+  --bg: #ffffff;
+  --bg-alt: #f7fafc;
+  --text: #1a202c;
+  --text-light: #4a5568;
+  --border: #e2e8f0;
+  --success: #276749;
+  --warning: #c05621;
+  --danger: #c53030;
+  --info: #2b6cb0;
+  --code-bg: #edf2f7;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  padding: 3rem 0;
+  text-align: center;
+}
+header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
+header .subtitle { font-size: 1.1rem; opacity: 0.9; margin-bottom: 1rem; }
+header .meta { font-size: 0.85rem; opacity: 0.7; }
+nav.toc {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 0.75rem 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+nav.toc .container { display: flex; flex-wrap: wrap; gap: 0; align-items: center; }
+nav.toc a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+nav.toc a:hover { background: var(--bg-alt); text-decoration: underline; }
+section { padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+h2 {
+  font-size: 1.6rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--accent);
+  font-weight: 700;
+}
+h3 { font-size: 1.2rem; color: var(--primary-light); margin: 1.5rem 0 0.75rem; font-weight: 600; }
+h4 { font-size: 1.05rem; color: var(--text); margin: 1.2rem 0 0.5rem; font-weight: 600; }
+p { margin-bottom: 0.75rem; text-align: justify; }
+ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+li { margin-bottom: 0.35rem; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow);
+}
+th, td { padding: 0.6rem 0.8rem; text-align: left; border: 1px solid var(--border); }
+th { background: var(--primary); color: white; font-weight: 600; font-size: 0.85rem; }
+tr:nth-child(even) { background: var(--bg-alt); }
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid;
+}
+.alert-danger { background: #fff5f5; border-color: var(--danger); color: #742a2a; }
+.alert-warning { background: #fffaf0; border-color: var(--warning); color: #7b341e; }
+.alert-info { background: #ebf8ff; border-color: var(--info); color: #2a4365; }
+.alert-success { background: #f0fff4; border-color: var(--success); color: #22543d; }
+.alert strong { display: block; margin-bottom: 0.25rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-p0 { background: #fed7d7; color: #9b2c2c; }
+.badge-p1 { background: #fefcbf; color: #975a16; }
+.badge-p2 { background: #c6f6d5; color: #276749; }
+.badge-p3 { background: #e2e8f0; color: #4a5568; }
+.flow-step {
+  display: inline-block;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin: 0.15rem;
+}
+.flow-arrow { color: var(--accent); font-weight: bold; margin: 0 0.2rem; }
+details {
+  margin: 0.75rem 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+details summary {
+  padding: 0.75rem 1rem;
+  background: var(--bg-alt);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary);
+  user-select: none;
+}
+details summary:hover { background: var(--border); }
+details > div, details > table, details > p, details > ul, details > ol {
+  padding: 0 1rem;
+}
+details[open] > div, details[open] > p { padding: 1rem; }
+.formula {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 1.1rem;
+  font-family: 'Cambria Math', 'Times New Roman', serif;
+  font-style: italic;
+}
+.risk-matrix td { text-align: center; font-weight: 600; font-size: 0.8rem; }
+.risk-high { background: #fed7d7 !important; }
+.risk-medium { background: #fefcbf !important; }
+.risk-low { background: #c6f6d5 !important; }
+footer {
+  background: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.85rem;
+}
+@media print {
+  nav.toc { position: static; }
+  section { page-break-inside: avoid; }
+  .no-print { display: none; }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 1rem; }
+  header h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.3rem; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 0.4rem; }
+  nav.toc a { font-size: 0.65rem; padding: 0.2rem 0.3rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>ReLiOn Teknik Planlama Raporu</h1>
+    <div class="subtitle">Lityum-Iyon Pil Ikincil Yasam Fizibilite Analizi ve Yeniden Kullanim Platformu</div>
+    <div class="meta">Tarih: 13 Temmuz 2026 | Versiyon: 1.0 | Durum: Planlama Asamasi</div>
+    <div class="meta">Teknoloji Yigini: Next.js | FastAPI | Python | MongoDB | Prisma ORM</div>
+  </div>
+</header>
+
+<nav class="toc no-print">
+  <div class="container">
+    <a href="#executive-summary">Ozet</a>
+    <a href="#section-1">1. Proje</a>
+    <a href="#section-2">2. Fonksiyonel</a>
+    <a href="#section-3">3. Akislar</a>
+    <a href="#section-4">4. Mimari</a>
+    <a href="#section-5">5. Moduller</a>
+    <a href="#section-6">6. Backend</a>
+    <a href="#section-7">7. Frontend</a>
+    <a href="#section-8">8. Analiz Motoru</a>
+    <a href="#section-9">9. Veritabani</a>
+    <a href="#section-10">10. Kimlik</a>
+    <a href="#section-11">11. Yapay Zeka</a>
+    <a href="#section-12">12. Guvenlik</a>
+    <a href="#section-13">13. Performans</a>
+    <a href="#section-14">14. DevOps</a>
+    <a href="#section-15">15. Yol Haritasi</a>
+    <a href="#section-16">16. Riskler</a>
+    <a href="#section-17">17. Eksikler</a>
+    <a href="#section-18">18. Oneriler</a>
+    <a href="#conclusion">Sonuc</a>
+  </div>
+</nav>
+
+<!-- YONETICI OZETI -->
+<section id="executive-summary">
+  <div class="container">
+    <h2>Yonetici Ozeti</h2>
+    <p>Bu rapor, ReLiOn platformunun sifirdan gelistirilmesi icin kapsamli bir teknik planlama belgesidir. ReLiOn, kullanim omrunu tamamlamis lityum-iyon pillerin "ikincil yasam" (second-life) potansiyelini degerlendiren, web tabanli bir karar destek platformudur. Kuresel olcekte 2030 yilina kadar 11 milyon tona ulasmasi ongoru-len atik batarya hacmi goz onune alindiginda, bu platformun hem cevresel hem de ekonomik acidan kritik bir ihtiyaci karsiladigi degerlendirilmektedir.</p>
+
+    <p>Spesifikasyon belgesinin detayli analizi sonucunda, sistemin matematiksel modellerinde birkac kritik sorun tespit edilmistir: (1) Kalan Omur (RUL) formulunde isaret hatasi bulunmaktadir, (2) Net Kazanc formulunde maliyet toplama yerine cikarilmalidir, (3) Ekonomik Uygunluk Skoru (EUS) formulu tanimlanmamistir, (4) Teknik Uygunluk Skoru (TUS) bilesenlerinde normalizasyon eksikligi vardir. Bu sorunlarin implementasyon oncesinde cozulmesi zorunludur.</p>
+
+    <p>Onerilen teknoloji yigini (Next.js, FastAPI, Python, MongoDB, Prisma ORM), projenin teknik gereksinimlerini karsilayabilecek yeterliliktedir. Ancak FastAPI'nin Python analiz motoruyla entegrasyonu, Prisma ORM'in MongoDB ile sinirli uyumu ve yapay zeka API bagimliligina yonelik onlemlerin alinmasi gerekmektedir. Proje 9 faz halinde planlanmis olup, analiz motorunun dogrulugu ve guvenilirliginin projenin basarisi icin en kritik faktor oldugu degerlendirilmektedir.</p>
+
+    <div class="alert alert-danger">
+      <strong>Kritik Bulgular</strong>
+      RUL ve Net Kazanc formullerinde isaret hatalari, EUS formulunun tanimsizligi ve TUS normalizasyon eksikligi, implementasyon oncesinde mutlaka cozulmesi gereken sorunlardir.
+    </div>
+  </div>
+</section>
+
+<!-- BOLUM 1: PROJE ANLAYISI -->
+<section id="section-1">
+  <div class="container">
+    <h2>1. Proje Anlayisi</h2>
+
+    <h3>1.1 Ana Hedef</h3>
+    <p>ReLiOn projesinin temel hedefi, kullanim omrunu tamamlamis veya atil durumda bulunan lityum-iyon pillerin "ikincil yasam" (second-life) potansiyelini bilimsel yontemlerle degerlendiren, erisilebi-lir ve kullanici dostu bir web tabanli karar destek platformu gelistirmektir. Platform; pil sagligi (State of Health - SoH), kalan omur (Remaining Useful Life - RUL), teknik uygunluk ve ekonomik fizibilite analizlerini birlestirerek, kullanicilara pillerin yeniden kullanim senaryolari hakkinda veri temelli oneriler sunmayi amaclamaktadir.</p>
+
+    <h3>1.2 Problem Tanimi</h3>
+    <p>Elektrikli arac (EA) kullaniminin kuresel olcekte yayginlasmasi, omrunu tamamlamis lityum-iyon bataryalarin yonetimini oncelikli bir cevresel ve ekonomik problem haline getirmistir. 2020 yilinda 100.000 ton olan kuresel atik batarya hacminin, 2030 yilina kadar kumulatif 11 milyon tona ulasmasi ongoru-lmektedir. Mevcut uygulamalar cogunlukla pillerin dogrudan geri donusumune odaklanirken, yeniden kullanim (reuse) potansiyeli yeterince degerlendirilememektedir. Bu durum hem ciddi bir kaynak israfi hem de cevresel risk olusturmaktadir.</p>
+
+    <h3>1.3 Kullanici Beklentileri</h3>
+    <table>
+      <tr><th>Beklenti</th><th>Aciklama</th></tr>
+      <tr><td>Kolay veri girisi</td><td>Batarya verilerinin sezgisel bir arayuz uzerinden hizli girilmesi</td></tr>
+      <tr><td>Dogru analiz</td><td>SoH, RUL, TUS ve ekonomik analizlerin guvenilir hesaplanmasi</td></tr>
+      <tr><td>Anlasilir raporlar</td><td>Gorsel grafikler ve ozet tablolarla sunulan analiz sonuclari</td></tr>
+      <tr><td>Yapay zeka onerileri</td><td>Pilin en uygun yeniden kullanim senaryosunun otomatik onerilmesi</td></tr>
+      <tr><td>Karsilastirma</td><td>Birden fazla analiz sonucunu yan yana karsilastirabilme</td></tr>
+      <tr><td>Raporlarin disari aktarilmasi</td><td>Analiz raporlarinin PDF veya CSV formatinda indirilebilmesi</td></tr>
+      <tr><td>Analiz gecmisi</td><td>Gecmis analizlere erisim ve trend takibi</td></tr>
+      <tr><td>Lokasyon onerisi</td><td>Pilin hangi cografi konumda daha verimli kullanilacagina dair oneri</td></tr>
+    </table>
+
+    <h3>1.4 Teknik Hedefler</h3>
+    <ul>
+      <li>Literaturde yayin olarak kullanilan batarya bozunma ve fizibilite modellerinin algoritmik olarak implementasyonu</li>
+      <li>Gercek zamanli analiz yapabilecek performansta bir hesaplama motoru</li>
+      <li>Yatay olceklenebilir (horizontally scalable) mimari</li>
+      <li>Harici yapay zeka API entegrasyonu ile karar destek mekanizmasi</li>
+      <li>Guvenli veri yonetimi ve denetim izi (audit trail)</li>
+      <li>LFP, NMC ve NCA kimyasallari icin ayri bozunma parametreleri</li>
+      <li>Gelecekte makine ogrenmesi (ML) algoritmalariyla genisletilebilir modular yapi</li>
+    </ul>
+
+    <h3>1.5 Is Hedefleri</h3>
+    <ul>
+      <li><strong>B2B Pazar:</strong> Elektrikli arac/batarya ureticileri ve BESS (Battery Energy Storage System) gelistiricileri icin atik yonetim maliyet optimizasyonu</li>
+      <li><strong>B2C Pazar:</strong> Arastirmacilar ve yesil teknoloji girisimcileri icin erisilebi-lir analiz araci</li>
+      <li><strong>Abonelik Modeli:</strong> Uyelik sistemi uzerinden farkli kullanici tiplerine hizmet sunumu</li>
+      <li><strong>Yerli Urun:</strong> Mevcut kuresel platformlarin yuksek lisanslama bedellerine karsi dusuk maliyetli, %100 yerli alternatif</li>
+      <li><strong>Disa Bagimlilik Azaltma:</strong> Enerji teknolojileri yazilimlari alaninda ulkenin disa bagimliliginin azaltilmasi</li>
+    </ul>
+
+    <h3>1.6 Riskler (Genel Bakis)</h3>
+    <table>
+      <tr><th>Risk Kategorisi</th><th>Aciklama</th><th>Etki</th></tr>
+      <tr><td>Teknik</td><td>Dogrusal bozunma modelinin gercek batarya davranisini yeterince yansitmamasi</td><td>Yuksek</td></tr>
+      <tr><td>Bilimsel</td><td>SoH verilerindeki uretici bazli farkliliklar ve olcum belirsizlikleri</td><td>Yuksek</td></tr>
+      <tr><td>Is</td><td>Pazar benimseme oraninin beklentilerin altinda kalmasi</td><td>Orta</td></tr>
+      <tr><td>Guvenlik</td><td>Batarya veri butunlugunun ihlali veya yanlis oneri uretilmesi</td><td>Kritik</td></tr>
+      <tr><td>Bagimlilik</td><td>Harici yapay zeka API servisinin erisilebilirligi ve maliyeti</td><td>Orta</td></tr>
+    </table>
+
+    <h3>1.7 Gizli Varsayimlar</h3>
+    <ul>
+      <li>Kullanicilarin ellerindeki batarya verilerinin (kapasite, dongu sayisi, ic direnc) makul dogrulukta oldugu varsayilmaktadir</li>
+      <li>Dogrusal bozunma modelinin ilk asamada kabul edilebilir dogrulukta oldugu varsayilmaktadir</li>
+      <li>Harici LLM API'sinin surekli erisilebi-lir ve kabul edilebilir maliyette olacagi varsayilmaktadir</li>
+      <li>Kullanicilarin temel batarya terminolojisine asina oldugu varsayilmaktadir</li>
+      <li>Platformun surekli internet baglantisi gerektirdigi ve cevrimdisi mod planlanmadigi varsayilmaktadir</li>
+      <li>Batarya kimyasi tipinin (LFP/NMC/NCA) kullanici tarafindan dogru secilecegi varsayilmaktadir</li>
+      <li>Enerji fiyatlarinin analiz suresi boyunca sabit kaldigi varsayilmaktadir (dinamik fiyatlandirma modeli PDF'de tanimlanmamistir)</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BOLUM 2: FONKSIYONEL ANALIZ -->
+<section id="section-2">
+  <div class="container">
+    <h2>2. Fonksiyonel Analiz</h2>
+
+    <h3>2.1 Zorunlu Ozellikler</h3>
+    <table>
+      <tr><th>#</th><th>Ozellik</th><th>Aciklama</th></tr>
+      <tr><td>Z01</td><td>Kullanici Kayit/Giris</td><td>E-posta ve sifre ile kayit, e-posta dogrulama, guvenli giris</td></tr>
+      <tr><td>Z02</td><td>Batarya Veri Girisi</td><td>LFP, NMC, NCA turlerinde kapasite, dongu, ic direnc, yas bilgisi girisi</td></tr>
+      <tr><td>Z03</td><td>SoH Hesaplama</td><td>Pil sagligi durumunun (C_mevcut/C_nominal)*100 formulu ile hesaplanmasi</td></tr>
+      <tr><td>Z04</td><td>RUL Hesaplama</td><td>Kalan kullanim omrunun dongu cinsinden tahmini</td></tr>
+      <tr><td>Z05</td><td>Kapasite Bozunma Modeli</td><td>C(n) = C0*(1-k*n) dogrusal bozunma hesabi</td></tr>
+      <tr><td>Z06</td><td>TUS Hesaplama</td><td>Cok kriterli agirlikli teknik uygunluk skoru</td></tr>
+      <tr><td>Z07</td><td>Ekonomik Analiz</td><td>Net kazanc ve yatirim geri donus suresi hesabi</td></tr>
+      <tr><td>Z08</td><td>Genel Degerlendirme Skoru</td><td>Teknik ve ekonomik skorlarin birlestirilmesi</td></tr>
+      <tr><td>Z09</td><td>Yapay Zeka Onerisi</td><td>LLM API ile en uygun yeniden kullanim senaryosunun onerilmesi</td></tr>
+      <tr><td>Z10</td><td>Analiz Raporu</td><td>Tum sonuclarin gorsel ve sayisal olarak sunulmasi</td></tr>
+      <tr><td>Z11</td><td>Analiz Gecmisi</td><td>Kullanicinin gecmis analizlerine erismesi</td></tr>
+      <tr><td>Z12</td><td>Kullanici Profili</td><td>Profil yonetimi, sifre degisikligi, hesap ayarlari</td></tr>
+      <tr><td>Z13</td><td>Kontrol Paneli (Dashboard)</td><td>Ozet istatistikler, son analizler, hizli islemler</td></tr>
+      <tr><td>Z14</td><td>Veri Dogrulama</td><td>Girdi verilerinin gecerlilik kontrolu ve hata mesajlari</td></tr>
+      <tr><td>Z15</td><td>Uyelik Sistemi</td><td>Farkli kullanici tipleri icin erisim yonetimi</td></tr>
+    </table>
+
+    <h3>2.2 Onerilen Ozellikler</h3>
+    <table>
+      <tr><th>#</th><th>Ozellik</th><th>Aciklama</th></tr>
+      <tr><td>O01</td><td>Analiz Karsilastirma</td><td>Birden fazla analiz sonucunun yan yana karsilastirilmasi</td></tr>
+      <tr><td>O02</td><td>PDF Rapor Disari Aktarma</td><td>Analiz raporlarinin PDF olarak indirilmesi</td></tr>
+      <tr><td>O03</td><td>Etkilesimli Grafikler</td><td>Zoom, hover ve filtreleme destekli grafikler</td></tr>
+      <tr><td>O04</td><td>Bildirim Sistemi</td><td>Analiz tamamlandi, hesap guncellendi gibi bildirimler</td></tr>
+      <tr><td>O05</td><td>Coklu Batarya Analizi</td><td>Tek seferde birden fazla bataryanin analiz edilmesi</td></tr>
+      <tr><td>O06</td><td>Toplu Isleme</td><td>CSV/Excel yukleme ile toplu batarya veri girisi</td></tr>
+      <tr><td>O07</td><td>Favori Analizler</td><td>Sik kullanilan analizlerin isaretlenmesi</td></tr>
+      <tr><td>O08</td><td>Gelismis Arama/Filtreleme</td><td>Kimya turu, SoH araligi, tarih gibi filtreler</td></tr>
+      <tr><td>O09</td><td>Kullanici Ayarlari</td><td>Bildirim tercihleri, dil, birim sistemi secenekleri</td></tr>
+      <tr><td>O10</td><td>Karanlik Mod</td><td>Goz yorgunlugunu azaltan koyu tema secenegi</td></tr>
+      <tr><td>O11</td><td>CSV Disari Aktarma</td><td>Ham analiz verilerinin CSV formatinda indirilmesi</td></tr>
+    </table>
+
+    <h3>2.3 Gelecek Ozellikler</h3>
+    <table>
+      <tr><th>#</th><th>Ozellik</th><th>Aciklama</th></tr>
+      <tr><td>G01</td><td>IoT/BMS Entegrasyonu</td><td>Batarya Yonetim Sistemleri ile gercek zamanli veri aktarimi</td></tr>
+      <tr><td>G02</td><td>Makine Ogrenmesi Tahminleri</td><td>LSTM/Random Forest ile RUL ve TUS tahmin iyilestirmesi</td></tr>
+      <tr><td>G03</td><td>Na-ion / Kati Hal Destegi</td><td>Yeni nesil batarya kimyalarinin bozunma modelleri</td></tr>
+      <tr><td>G04</td><td>Karbon Kredisi Entegrasyonu</td><td>Uluslararasi karbon kredisi mekanizmalarinin parametre olarak eklenmesi</td></tr>
+      <tr><td>G05</td><td>Gercek Zamanli Izleme</td><td>Bagli bataryalarin canli performans takibi</td></tr>
+      <tr><td>G06</td><td>Batarya Pazar Yeri</td><td>Ikincil kullanim bataryalarinin alis-satis platformu</td></tr>
+      <tr><td>G07</td><td>Cok Dilli Destek</td><td>Ingilizce, Almanca ve diger diller</td></tr>
+      <tr><td>G08</td><td>Mobil Uygulama</td><td>iOS ve Android icin yerel uygulama</td></tr>
+      <tr><td>G09</td><td>Ucuncu Parti API</td><td>Dis sistemlerin ReLiOn analizlerini kullanabilmesi</td></tr>
+      <tr><td>G10</td><td>Batarya Pasaportu</td><td>AB regulasyonlarina uygun dijital batarya kimlik sistemi</td></tr>
+      <tr><td>G11</td><td>Yasal Regulasyon Motoru</td><td>Farkli ulkelerin atik yonetimi yasalarinin parametre olarak eklenmesi</td></tr>
+    </table>
+
+    <h3>2.4 Kurumsal Ozellikler (Enterprise)</h3>
+    <table>
+      <tr><th>#</th><th>Ozellik</th><th>Aciklama</th></tr>
+      <tr><td>K01</td><td>Takim Yonetimi</td><td>Kurumsal hesap altinda coklu kullanici ve rol yonetimi</td></tr>
+      <tr><td>K02</td><td>Toplu Analiz</td><td>Yuzlerce bataryanin es zamanli analizi</td></tr>
+      <tr><td>K03</td><td>Beyaz Etiket (White-label)</td><td>Kurumsal markalamayla ozellestirilmis arayuz</td></tr>
+      <tr><td>K04</td><td>Ozel Raporlama</td><td>Kuruma ozel rapor sablonlari ve metrikleri</td></tr>
+      <tr><td>K05</td><td>SLA Destegi</td><td>Garantili hizmet seviyesi ve oncelikli destek</td></tr>
+      <tr><td>K06</td><td>Ozel Sunucu</td><td>Izole altyapi uzerinde calisma secenegi</td></tr>
+      <tr><td>K07</td><td>Gelismis Analitik</td><td>Trend analizi, tahminsel modeller, ozel panolar</td></tr>
+      <tr><td>K08</td><td>Yuksek API Limiti</td><td>Standart kullanicilara kiyasla cok daha yuksek istek limitleri</td></tr>
+    </table>
+
+    <h3>2.5 Arastirma Ozellikleri</h3>
+    <table>
+      <tr><th>#</th><th>Ozellik</th><th>Aciklama</th></tr>
+      <tr><td>A01</td><td>Ham Veri Disari Aktarma</td><td>Tum hesaplama ara degerlerinin indirilebilmesi</td></tr>
+      <tr><td>A02</td><td>Ozel Bozunma Modelleri</td><td>Arastirmacinin kendi k katsayilarini tanimlamasi</td></tr>
+      <tr><td>A03</td><td>Parametre Duyarlilik Analizi</td><td>Girdi parametrelerinin sonuclara etkisinin incelenmesi</td></tr>
+      <tr><td>A04</td><td>Akademik Atif Formati</td><td>Analiz sonuclarinin akademik yayin formatinda sunulmasi</td></tr>
+      <tr><td>A05</td><td>Veri Seti Paylasimi</td><td>Anonimlestirilmis analiz verilerinin arastirma topluluguyla paylasimi</td></tr>
+      <tr><td>A06</td><td>Is Birligi Araclari</td><td>Birden fazla arastirmacinin ayni analiz uzerinde calismasi</td></tr>
+      <tr><td>A07</td><td>Genisletilmis Gecmis</td><td>Sinirssiz analiz gecmisi ve veri saklama</td></tr>
+      <tr><td>A08</td><td>Model Karsilastirma</td><td>Farkli bozunma modellerinin sonuclarinin karsilastirilmasi</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- BOLUM 3: KULLANICI AKISLARI -->
+<section id="section-3">
+  <div class="container">
+    <h2>3. Kullanici Akislari</h2>
+
+    <h3>3.1 Misafir Kullanici Akisi</h3>
+    <p>
+      <span class="flow-step">Anasayfa Ziyareti</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Platform Tanitimi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Ornek Analiz Goruntuleme</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Kayit Ol / Giris Yap</span>
+    </p>
+    <p>Misafir kullanicilar analiz yapamaz; yalnizca tanitim iceriklerini ve ornek raporu goruntuleyebilir. Analiz erisimi icin kayit zorunludur.</p>
+
+    <h3>3.2 Bireysel Kullanici Akisi (Tam Akis)</h3>
+    <p>
+      <span class="flow-step">Kayit</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">E-posta Dogrulama</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Giris</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Dashboard</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Yeni Analiz</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Batarya Veri Girisi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Veri Dogrulama</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Analiz Isleme</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">SoH/RUL/TUS/Ekonomik Hesaplama</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Yapay Zeka Onerisi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Rapor Goruntuleme</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Rapor Kaydetme</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Gecmis Goruntulememe</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Karsilastirma</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">PDF Disari Aktarma</span>
+    </p>
+    <p><strong>Hata Durumlari:</strong> Gecersiz veri girisinde form dogrulama hatalari gosterilir. Analiz sirasinda sunucu hatasinda kullaniciya bilgi verilir ve yeniden deneme secenegi sunulur. Yapay zeka servisi erisilebi-lir degilse, yalnizca sayisal sonuclar gosterilir.</p>
+
+    <h3>3.3 Kurumsal Kullanici Akisi</h3>
+    <p>
+      <span class="flow-step">Kurumsal Kayit</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Hesap Onay</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Takim Olusturma</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Uye Davet</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Toplu Veri Yukleme (CSV)</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Toplu Analiz</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Kurumsal Rapor</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">API Erisimi</span>
+    </p>
+
+    <h3>3.4 Arastirmaci Akisi</h3>
+    <p>
+      <span class="flow-step">Akademik Kayit</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Arastirmaci Dogrulama</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Gelismis Dashboard</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Ozel Model Parametreleri</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Karsilastirmali Analiz</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Ham Veri Erisimi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Duyarlilik Analizi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Akademik Format Disari Aktarma</span>
+    </p>
+
+    <h3>3.5 Yonetici (Admin) Akisi</h3>
+    <p>
+      <span class="flow-step">Admin Girisi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Admin Paneli</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Kullanici Yonetimi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Analiz Izleme</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Sistem Metrikleri</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Denetim Kayitlari</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Sistem Yapilandirmasi</span>
+    </p>
+  </div>
+</section>
+
+<!-- BOLUM 4: YAZILIM MIMARISI -->
+<section id="section-4">
+  <div class="container">
+    <h2>4. Yazilim Mimarisi</h2>
+
+    <h3>4.1 Genel Mimari Gorunumu</h3>
+    <pre><code class="language-mermaid">
+graph TB
+    Client[Istemci / Tarayici]
+    NextJS[Next.js Frontend]
+    FastAPI[FastAPI Backend]
+    Engine[Python Analiz Motoru]
+    MongoDB[(MongoDB)]
+    Redis[(Redis Cache)]
+    AI[Yapay Zeka API]
+    Celery[Celery Isci]
+    S3[Dosya Deposu]
+
+    Client --> NextJS
+    NextJS -->|REST API| FastAPI
+    FastAPI --> Engine
+    FastAPI --> MongoDB
+    FastAPI --> Redis
+    FastAPI --> AI
+    FastAPI --> Celery
+    Celery --> Engine
+    Celery --> MongoDB
+    Celery --> AI
+    FastAPI --> S3
+    </code></pre>
+
+    <h3>4.2 Frontend Mimarisi (Next.js)</h3>
+    <ul>
+      <li><strong>App Router:</strong> Next.js 14+ App Router yapisi ile sayfa yonlendirme</li>
+      <li><strong>SSR/CSR Stratejisi:</strong> Anasayfa ve acik sayfalar SSR, dashboard ve analiz sayfalari CSR</li>
+      <li><strong>Durum Yonetimi:</strong> Zustand veya React Context ile global durum, React Query ile sunucu durumu</li>
+      <li><strong>API Istemci Katmani:</strong> Axios veya fetch tabanli merkezi API istemcisi, otomatik token yenileme</li>
+    </ul>
+
+    <h3>4.3 Backend Mimarisi (FastAPI)</h3>
+    <ul>
+      <li><strong>Servis Katmani:</strong> Controller &rarr; Service &rarr; Repository deseni</li>
+      <li><strong>Katman Yazilimi (Middleware):</strong> Kimlik dogrulama, hiz siniri, CORS, loglama, hata yakalama</li>
+      <li><strong>API Versiyonlama:</strong> /api/v1/ on eki ile geriye uyumluluk</li>
+      <li><strong>Dogrulama:</strong> Pydantic modelleri ile istek dogrulama</li>
+    </ul>
+
+    <h3>4.4 Analiz Motoru (Python)</h3>
+    <ul>
+      <li>FastAPI'den bagimsiz olarak test edilebilir Python paketi</li>
+      <li>Her formul icin ayri modul: soh.py, degradation.py, rul.py, tus.py, economic.py, score.py</li>
+      <li>NumPy ile sayisal hesaplamalar</li>
+      <li>Girdi dogrulama ve cikti formatlama katmanlari</li>
+    </ul>
+
+    <h3>4.5 Veritabani (MongoDB + Prisma)</h3>
+    <p>MongoDB esnek sema yapisi ile batarya verilerinin cesitli formatlarda saklanmasina olanak tanir. Prisma ORM, uygulama katmani ile veritabani arasinda tip-guvenli erisim saglar. Ancak Prisma'nin MongoDB destegi sinirlidir; karmasik agregasyon islemleri icin dogru-dan MongoDB sorma dili (driver) kullanimi gerekebilir.</p>
+
+    <h3>4.6 - 4.12 Altyapi Bilesenleri</h3>
+    <table>
+      <tr><th>Bilesen</th><th>Teknoloji</th><th>Amac</th></tr>
+      <tr><td>Kimlik Dogrulama</td><td>JWT (Access + Refresh Token)</td><td>Durumsuz kimlik dogrulama</td></tr>
+      <tr><td>Dosya Deposu</td><td>S3 veya MinIO</td><td>PDF raporlari ve kullanici yukleme-leri</td></tr>
+      <tr><td>Loglama</td><td>Yapisal JSON + ELK/Loki</td><td>Merkezi log toplanmasi ve analizi</td></tr>
+      <tr><td>Izleme</td><td>Prometheus + Grafana</td><td>Metrikler, uyarilar, saglik kontrolleri</td></tr>
+      <tr><td>Yapay Zeka</td><td>OpenAI/Anthropic API</td><td>LLM tabanli oneri sistemi</td></tr>
+      <tr><td>Arka Plan Isleri</td><td>Celery + Redis</td><td>Agir hesaplamalar, rapor uretimi, AI cagilari</td></tr>
+      <tr><td>Onbellekleme</td><td>Redis</td><td>Oturum, analiz sonuclari, AI yanitlari</td></tr>
+    </table>
+
+    <h3>4.13 Dagitim Mimarisi</h3>
+    <pre><code class="language-mermaid">
+graph LR
+    subgraph Uretim
+        LB[Yuk Dengeleyici]
+        FE1[Next.js Pod 1]
+        FE2[Next.js Pod 2]
+        BE1[FastAPI Pod 1]
+        BE2[FastAPI Pod 2]
+        W1[Celery Isci 1]
+        W2[Celery Isci 2]
+        DB[(MongoDB ReplicaSet)]
+        RD[(Redis Cluster)]
+    end
+    LB --> FE1
+    LB --> FE2
+    FE1 --> BE1
+    FE2 --> BE2
+    BE1 --> DB
+    BE2 --> DB
+    BE1 --> RD
+    W1 --> DB
+    W2 --> DB
+    </code></pre>
+
+    <h3>4.14 - 4.17 Olceklenebilirlik ve Gelecek</h3>
+    <p><strong>Olceklenebilirlik:</strong> FastAPI iscileri yatay olarak cogaltilabilir. MongoDB replica set ile okuma performansi arttirilabilir. Redis cluster ile onbellek kapasitesi genisletilebilir.</p>
+    <p><strong>Mikro Servis Donusumu:</strong> Ileride analiz motoru, yapay zeka servisi ve rapor servisi bagimsiz mikro servisler olarak ayrilabilir. Bu donusum icin gunumuzdeki monolitik yapi, moduler sinirlarla tasarlanmalidir.</p>
+  </div>
+</section>
+
+<!-- BOLUM 5: MODUL AYRISTIRMASI -->
+<section id="section-5">
+  <div class="container">
+    <h2>5. Modul Ayristirmasi</h2>
+    <p>Sistem, asagida detaylari verilen 16 mantiksal module ayristirilmistir. Her modul icin amac, sorumluluklar, bagimliliklar, karmasiklik ve oncelik degerlendirilmistir.</p>
+
+    <table>
+      <tr><th>Modul</th><th>Amac</th><th>Oncelik</th><th>Karmasiklik</th><th>Bagimliliklar</th></tr>
+      <tr><td>Kimlik Dogrulama</td><td>Kayit, giris, token yonetimi, sifre sifirlama</td><td>P0</td><td>Orta</td><td>Veritabani, Redis, E-posta servisi</td></tr>
+      <tr><td>Kullanici Yonetimi</td><td>Profil CRUD, rol yonetimi, hesap ayarlari</td><td>P0</td><td>Orta</td><td>Kimlik Dogrulama, Veritabani</td></tr>
+      <tr><td>Batarya Veri Girisi</td><td>Batarya verilerinin toplanmasi ve dogrulanmasi</td><td>P0</td><td>Orta</td><td>Kimya Profilleri, Kullanici Modulu</td></tr>
+      <tr><td>SoH Hesaplama</td><td>Pil sagligi durumu hesaplamasi</td><td>P0</td><td>Dusuk</td><td>Batarya Veri Girisi</td></tr>
+      <tr><td>Kapasite Bozunma</td><td>Donguye bagli kapasite azalim modellemesi</td><td>P0</td><td>Yuksek</td><td>Kimya Profilleri, Batarya Veri Girisi</td></tr>
+      <tr><td>RUL Hesaplama</td><td>Kalan faydali omur tahmini</td><td>P0</td><td>Orta</td><td>SoH, Bozunma Modulu</td></tr>
+      <tr><td>TUS Hesaplama</td><td>Cok kriterli teknik uygunluk skoru</td><td>P0</td><td>Yuksek</td><td>SoH, RUL, Batarya Veri Girisi</td></tr>
+      <tr><td>Ekonomik Analiz</td><td>Net kazanc, ROI, EUS hesaplari</td><td>P0</td><td>Yuksek</td><td>Batarya Veri Girisi, Enerji Fiyat Verisi</td></tr>
+      <tr><td>Genel Skor</td><td>TUS ve EUS birlesimi ile genel uygunluk</td><td>P0</td><td>Orta</td><td>TUS, Ekonomik Analiz</td></tr>
+      <tr><td>Yapay Zeka Onerisi</td><td>LLM tabanli senaryo onerisi</td><td>P1</td><td>Cok Yuksek</td><td>Tum Analiz Modulleri, Harici API, Redis</td></tr>
+      <tr><td>Rapor Olusturma</td><td>Gorsel ve indirilebilir rapor uretimi</td><td>P1</td><td>Orta</td><td>Tum Analiz Modulleri, AI Modulu</td></tr>
+      <tr><td>Analiz Gecmisi</td><td>Gecmis analizlere erisim ve arama</td><td>P1</td><td>Dusuk</td><td>Veritabani, Kullanici Modulu</td></tr>
+      <tr><td>Karsilastirma</td><td>Birden fazla analizin karsilastirilmasi</td><td>P2</td><td>Orta</td><td>Analiz Gecmisi</td></tr>
+      <tr><td>Admin</td><td>Sistem yonetimi, kullanici yonetimi</td><td>P1</td><td>Orta</td><td>Kullanici Yonetimi, Analiz Gecmisi</td></tr>
+      <tr><td>Bildirim</td><td>E-posta ve uygulama ici bildirimler</td><td>P2</td><td>Dusuk</td><td>Kullanici Modulu, E-posta Servisi</td></tr>
+      <tr><td>Dis Entegrasyon</td><td>IoT/BMS, ucuncu parti API</td><td>P3</td><td>Yuksek</td><td>Batarya Veri Girisi, Analiz Modulleri</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- BOLUM 6: BACKEND PLANLAMASI -->
+<section id="section-6">
+  <div class="container">
+    <h2>6. Backend Planlamasi</h2>
+
+    <h3>6.1 Servis Mimarisi</h3>
+    <table>
+      <tr><th>Servis</th><th>Sorumluluk</th><th>Katman</th></tr>
+      <tr><td>AuthService</td><td>Kayit, giris, token uretimi/dogrulama, sifre sifirlama, e-posta dogrulama</td><td>Core</td></tr>
+      <tr><td>UserService</td><td>Kullanici profili CRUD, rol yonetimi, hesap ayarlari</td><td>Core</td></tr>
+      <tr><td>BatteryService</td><td>Batarya veri girisi dogrulama, kaydetme, guncelleme, silme</td><td>Core</td></tr>
+      <tr><td>AnalysisOrchestrator</td><td>Analiz is akisi yonetimi - tum hesaplama servislerini sirali/paralel cagirma</td><td>Core</td></tr>
+      <tr><td>SoHService</td><td>SoH hesaplama, sonuc formatlama</td><td>Engine</td></tr>
+      <tr><td>DegradationService</td><td>Bozunma modeli hesaplama, kimyaya ozel k degerleri</td><td>Engine</td></tr>
+      <tr><td>RULService</td><td>Kalan omur tahmini, belirsizlik siniri</td><td>Engine</td></tr>
+      <tr><td>TUSService</td><td>Bilesen normalizasyonu, agirlikli teknik skor</td><td>Engine</td></tr>
+      <tr><td>EconomicService</td><td>Net kazanc, ROI, EUS hesaplari</td><td>Engine</td></tr>
+      <tr><td>ScoreService</td><td>Genel degerlendirme skoru (TUS + EUS)</td><td>Engine</td></tr>
+      <tr><td>AIService</td><td>LLM iletisim, prompt olusturma, yanit dogrulama</td><td>Integration</td></tr>
+      <tr><td>ReportService</td><td>Rapor sablonu isleme, PDF uretimi</td><td>Core</td></tr>
+      <tr><td>HistoryService</td><td>Analiz gecmisi CRUD, arama, filtreleme</td><td>Core</td></tr>
+      <tr><td>AdminService</td><td>Sistem istatistikleri, kullanici yonetimi, yapilandirma</td><td>Admin</td></tr>
+      <tr><td>NotificationService</td><td>E-posta gonderi-m, uygulama ici bildirimler</td><td>Support</td></tr>
+    </table>
+
+    <h3>6.2 Is Mantigi Katmanlari</h3>
+    <p><strong>Controller (Router) &rarr; Service &rarr; Repository</strong> deseni uygulanmalidir:</p>
+    <ul>
+      <li><strong>Controller:</strong> HTTP istek/yanit yonetimi, Pydantic ile istek dogrulama, yetkilendirme middleware kontrolu. Is mantigi ICERMEZ.</li>
+      <li><strong>Service:</strong> Tum is mantigi bu katmanda. Birden fazla repository'yi koordine eder. Islem (transaction) yonetimi burada gerceklesir.</li>
+      <li><strong>Repository:</strong> Yalnizca veritabani erisimi. Prisma ORM uzerinden CRUD islemleri. Tum sorgular bu katmanda yer alir.</li>
+    </ul>
+
+    <h3>6.3 Dogrulama Katmanlari</h3>
+    <ol>
+      <li><strong>Istek Dogrulama (Pydantic):</strong> Tip kontrolu, zorunlu alan kontrolu, format dogrulama</li>
+      <li><strong>Is Kurali Dogrulama:</strong> Kapasite &gt; 0, dongu &ge; 0, kimya tipi beyaz liste, SoH aralik kontrolu</li>
+      <li><strong>Veri Butunlugu:</strong> Referans iliskileri (kullanici var mi, batarya bu kullaniciya ait mi)</li>
+      <li><strong>Cikti Dogrulama:</strong> Hesaplama sonuclarinin makul araliklarda olup olmadiginin kontrolu (SoH: 0-100, RUL &ge; 0)</li>
+    </ol>
+
+    <h3>6.4 Hesaplama Izolasyonu</h3>
+    <p>Python analiz motoru, FastAPI uygulamasindan BAGIMSIZ bir Python paketi olarak gelistirilmelidir. Bu paket: pip ile kurulabilir, bagimsiz olarak test edilebilir, versiyonlanabilir olmalidir. FastAPI bu paketi import ederek cagirirken, analiz motoru hicbir web cati-sina (framework) bagimlilik tasimamalidir.</p>
+
+    <h3>6.5 API Versiyonlama ve Hata Yonetimi</h3>
+    <p><strong>Versiyonlama:</strong> /api/v1/ on eki ile tum endpoint'ler versiyonlanir. Geriye uyumluluk en az bir onceki versiyon icin saglanir.</p>
+    <p><strong>Hata Yonetimi:</strong> Standart hata formati: {code, message, details, correlation_id}. Ozel istisna hiyerarsisi: ValidationError, AuthenticationError, AuthorizationError, NotFoundError, AnalysisError, AIServiceError.</p>
+  </div>
+</section>
+
+<!-- BOLUM 7: FRONTEND PLANLAMASI -->
+<section id="section-7">
+  <div class="container">
+    <h2>7. Frontend Planlamasi</h2>
+
+    <h3>7.1 Sayfa Haritasi</h3>
+    <table>
+      <tr><th>Sayfa</th><th>Yol</th><th>Erisim</th><th>Aciklama</th></tr>
+      <tr><td>Anasayfa</td><td>/</td><td>Herkese acik</td><td>Platform tanitimi, ozellikler, ornek analiz</td></tr>
+      <tr><td>Giris</td><td>/auth/login</td><td>Misafir</td><td>E-posta ve sifre ile giris</td></tr>
+      <tr><td>Kayit</td><td>/auth/register</td><td>Misafir</td><td>Yeni hesap olusturma</td></tr>
+      <tr><td>Sifre Sifirlama</td><td>/auth/forgot-password</td><td>Misafir</td><td>Sifre sifirlama akisi</td></tr>
+      <tr><td>Kontrol Paneli</td><td>/dashboard</td><td>Uye</td><td>Ozet istatistikler, son analizler</td></tr>
+      <tr><td>Yeni Analiz</td><td>/analysis/new</td><td>Uye</td><td>3 adimli batarya veri girisi sihirbazi</td></tr>
+      <tr><td>Analiz Sonucu</td><td>/analysis/[id]</td><td>Uye</td><td>Detayli rapor, grafikler, AI onerisi</td></tr>
+      <tr><td>Gecmis</td><td>/history</td><td>Uye</td><td>Gecmis analizlerin listesi</td></tr>
+      <tr><td>Karsilastirma</td><td>/compare</td><td>Uye</td><td>Secili analizlerin yan yana gorunumu</td></tr>
+      <tr><td>Ayarlar</td><td>/settings</td><td>Uye</td><td>Profil, bildirimler, abonelik</td></tr>
+      <tr><td>Admin Paneli</td><td>/admin/*</td><td>Yonetici</td><td>Kullanici, metrik, yapilandirma yonetimi</td></tr>
+    </table>
+
+    <h3>7.2 Batarya Veri Girisi Sihirbazi</h3>
+    <p>3 adimli wizard yapisi:</p>
+    <ol>
+      <li><strong>Batarya Bilgileri:</strong> Kimya tipi (LFP/NMC/NCA), nominal kapasite (Ah), mevcut kapasite (Ah), dongu sayisi, ic direnc (mohm), yas (yil), uretici</li>
+      <li><strong>Hedef Proje:</strong> Kullanim senaryosu (BESS/Ev Tipi/Mikro Sebeke), hedef konum, beklenen kullanim suresi</li>
+      <li><strong>Ekonomik Veriler:</strong> Yatirim maliyeti, enerji birim fiyati, isletme giderleri</li>
+    </ol>
+
+    <h3>7.3 Grafik Turleri</h3>
+    <table>
+      <tr><th>Grafik</th><th>Tur</th><th>Amac</th></tr>
+      <tr><td>SoH Gostergesi</td><td>Gauge/Radial</td><td>Pilin mevcut sagligi gorsel gosterge</td></tr>
+      <tr><td>Bozunma Egrisi</td><td>Cizgi grafigi</td><td>Kapasite-dongu iliskisi</td></tr>
+      <tr><td>RUL Zaman Cizgisi</td><td>Ilerleme cubugu</td><td>Kalan omrun gorsel sunumu</td></tr>
+      <tr><td>Ekonomik Analiz</td><td>Cubuk grafigi</td><td>Gelir, maliyet, net kazanc</td></tr>
+      <tr><td>TUS Bilesenleri</td><td>Radar grafigi</td><td>SoH, 1/R, RUL bilesenleri</td></tr>
+      <tr><td>Gecmis Trendi</td><td>Cizgi grafigi</td><td>Analizler arasi degisim</td></tr>
+    </table>
+
+    <h3>7.4 Kullanici Deneyimi ve Erisilebilirlik</h3>
+    <ul>
+      <li>Yukleme durumlari icin iskelet ekranlar (skeleton screens)</li>
+      <li>Toast bildirim sistemi</li>
+      <li>Onay diyaloglari (tehlikeli islemler icin)</li>
+      <li>Analiz isleme sirasinda ilerleme gostergesi</li>
+      <li>Mobil oncelikli (mobile-first) tasarim, uyumlu kesme noktalari</li>
+      <li>WCAG 2.1 AA uyumlulugu: klavye navigasyonu, ekran okuyucu, renk kontrasti</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BOLUM 8: PYTHON ANALIZ MOTORU -->
+<section id="section-8">
+  <div class="container">
+    <h2>8. Python Analiz Motoru</h2>
+    <div class="alert alert-info">
+      <strong>Bu bolum, projenin teknik cekirdegini olusturan matematiksel modellerin derinlemesine analizini icermektedir.</strong>
+    </div>
+
+    <h3>8.1 Pil Sagligi Durumu (State of Health - SoH)</h3>
+    <div class="formula">SoH = (C<sub>mevcut</sub> / C<sub>nominal</sub>) &times; 100</div>
+    <table>
+      <tr><th>Kenar Durum</th><th>Sorun</th><th>Cozum</th></tr>
+      <tr><td>C_nominal = 0</td><td>Sifira bolme</td><td>Girdi dogrulamada C_nominal &gt; 0 zorunlulugu</td></tr>
+      <tr><td>C_mevcut &gt; C_nominal</td><td>SoH &gt; %100</td><td>%110'a kadar tolerans, sonuc 0-100'e kisitla</td></tr>
+      <tr><td>C_mevcut = 0</td><td>Olu pil</td><td>SoH = 0, analiz sonlandir</td></tr>
+      <tr><td>Negatif degerler</td><td>Anlamsiz</td><td>Her iki deger &gt; 0 zorunlu</td></tr>
+    </table>
+
+    <h3>8.2 Kapasite Bozunma Modeli</h3>
+    <div class="formula">C(n) = C<sub>0</sub> &times; (1 - k &times; n)</div>
+
+    <div class="alert alert-danger">
+      <strong>Kritik Sinirlamalar</strong>
+      Dogrusal model gercek batarya bozunma davranisini yeterince temsil etmez. Diz noktasi (knee-point) fenomeni, takvim yaslanmasi, sicaklik/C-rate/DoD etkileri modellenememektedir.
+    </div>
+
+    <table>
+      <tr><th>Kimya</th><th>k Araligi (yaklasik)</th><th>Karakteristik</th></tr>
+      <tr><td>LFP</td><td>0.00002 - 0.00005</td><td>En yavus bozunma, uzun omur</td></tr>
+      <tr><td>NMC</td><td>0.00003 - 0.00008</td><td>Orta bozunma, dengeli performans</td></tr>
+      <tr><td>NCA</td><td>0.00004 - 0.0001</td><td>Hizli bozunma, yuksek enerji yogunlugu</td></tr>
+    </table>
+
+    <p><strong>Iyilestirme Onerileri:</strong> Yari-ampirik modeller (Ah-throughput), Arrhenius tabanli takvim yaslanma, diz noktasi algilama, Rainflow sayim yontemi, gelecekte LSTM/Gaussian Process.</p>
+
+    <h3>8.3 Kalan Omur (RUL)</h3>
+    <div class="formula">PDF: RUL = (C<sub>esik</sub> - C<sub>mevcut</sub>) / k</div>
+    <div class="alert alert-danger">
+      <strong>ISARET HATASI</strong>
+      Kullanilabilir bataryada C<sub>mevcut</sub> &gt; C<sub>esik</sub> oldugundan pay negatif olur. Dogru formul: RUL = (C<sub>mevcut</sub> - C<sub>esik</sub>) / (k &times; C<sub>0</sub>)
+    </div>
+    <table>
+      <tr><th>Kenar Durum</th><th>Cozum</th></tr>
+      <tr><td>k = 0</td><td>"Bozunma verisi yetersiz" uyarisi</td></tr>
+      <tr><td>C_mevcut &lt; C_esik</td><td>RUL = 0, "omrunu tamamlamis" uyarisi</td></tr>
+    </table>
+    <p><strong>Belirsizlik:</strong> Monte Carlo simulasyonu ile guven araliklari eklenmeli.</p>
+
+    <h3>8.4 Teknik Uygunluk Skoru (TUS)</h3>
+    <div class="formula">TUS = &omega;<sub>1</sub> &times; SoH + &omega;<sub>2</sub> &times; (1/R<sub>ic</sub>) + &omega;<sub>3</sub> &times; RUL</div>
+    <div class="alert alert-warning">
+      <strong>NORMALIZASYON SORUNU</strong>
+      Bilesenler farkli olceklerdedir (SoH: 0-100, 1/R: degisken, RUL: 0-10.000+). Min-max normalizasyonu zorunludur. &omega;<sub>1</sub> + &omega;<sub>2</sub> + &omega;<sub>3</sub> = 1 olmalidir.
+    </div>
+    <p><strong>Baslangic Agirliklari (Onerilen):</strong> &omega;<sub>1</sub> = 0.4, &omega;<sub>2</sub> = 0.3, &omega;<sub>3</sub> = 0.3. AHP veya uzman istisaresi ile belirlenmelidir.</p>
+
+    <h3>8.5 Ekonomik Hesaplamalar</h3>
+    <div class="formula">PDF: Net Kazanc = (E<sub>toplam</sub> &times; P<sub>enerji</sub>) + M<sub>toplam</sub></div>
+    <div class="alert alert-danger">
+      <strong>ISARET HATASI</strong>
+      M<sub>toplam</sub> maliyet ise cikarilmalidir: Net Kazanc = (E<sub>toplam</sub> &times; P<sub>enerji</sub>) - M<sub>toplam</sub>
+    </div>
+    <p><strong>Eksik Kavramlar:</strong> Paranin zaman degeri (NPV), enflasyon, enerji fiyat oynakligi, Ic Verim Orani (IRR), LCOE hesabi eklenmelidir.</p>
+
+    <h3>8.6 Genel Skor ve EUS</h3>
+    <div class="formula">Skor = &alpha; &times; TUS + &beta; &times; EUS</div>
+    <div class="alert alert-danger">
+      <strong>EUS TANIMSIZ</strong>
+      Ekonomik Uygunluk Skoru formuluie PDF'de bulunmamaktadir. Onerilen: EUS = &gamma;<sub>1</sub> &times; norm(Net Kazanc) + &gamma;<sub>2</sub> &times; norm(1/ROI). Implementasyon oncesinde tanimlanmasi zorunludur.
+    </div>
+
+    <h3>8.7 Yapay Zeka Oneri Pipeline</h3>
+    <ol>
+      <li>Veri hazirlama (SoH, RUL, TUS, EUS, kimya, hedef proje &rarr; JSON)</li>
+      <li>Baglam olusturma (domain bilgisi + kullanici verisi)</li>
+      <li>LLM API cagrisi</li>
+      <li>Yanit dogrulama (yapilandirilmis cikti ayristirma, guvenlik kisitlari kontrolu)</li>
+      <li>Sonuc formatlama (senaryo, aciklama, guven skoru)</li>
+    </ol>
+
+    <h3>8.8 Dogrulama Gereksinimleri</h3>
+    <table>
+      <tr><th>Parametre</th><th>Gecerli Aralik</th><th>Birim</th></tr>
+      <tr><td>Nominal Kapasite</td><td>0.1 - 1000</td><td>Ah</td></tr>
+      <tr><td>Mevcut Kapasite</td><td>0.1 - nominal &times; 1.1</td><td>Ah</td></tr>
+      <tr><td>Dongu Sayisi</td><td>0 - 50.000</td><td>dongu</td></tr>
+      <tr><td>Ic Direnc</td><td>0.001 - 10</td><td>ohm</td></tr>
+      <tr><td>Yas</td><td>0 - 30</td><td>yil</td></tr>
+    </table>
+
+    <h3>8.9 Sayisal Kararlilik ve Performans</h3>
+    <ul>
+      <li>Cift hassasiyet (float64) kullanimi zorunlu</li>
+      <li>Tum sifira bolme durumlari ele alinmali (C_nominal, k, R_ic)</li>
+      <li>k*n &gt; 1 durumunda C(n) &ge; 0 kisiti</li>
+      <li>NumPy vektorizasyonu ile toplu hesaplama performansi</li>
+      <li>Her formul bagimsiz modul olarak test edilebilir olmali</li>
+    </ul>
+
+    <h3>8.10 Test Stratejisi</h3>
+    <ul>
+      <li><strong>Birim Testleri:</strong> Her formul icin bilinen degerlerle dogrulama</li>
+      <li><strong>Kenar Durum Testleri:</strong> Sifir, negatif, cok buyuk/kucuk degerler</li>
+      <li><strong>Altin Test Vakalari:</strong> Literaturden dogrulanmis batarya verileri</li>
+      <li><strong>Regresyon Testleri:</strong> Model guncellemelerinde sonuc korunmasi</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BOLUM 9: VERITABANI PLANLAMASI -->
+<section id="section-9">
+  <div class="container">
+    <h2>9. Veritabani Planlamasi</h2>
+
+    <h3>9.1 Koleksiyonlar</h3>
+    <table>
+      <tr><th>Koleksiyon</th><th>Temel Alanlar</th><th>Aciklama</th></tr>
+      <tr><td>users</td><td>_id, email, password_hash, name, role, subscription_tier, created_at, updated_at, email_verified, last_login</td><td>Kullanici hesap bilgileri</td></tr>
+      <tr><td>batteries</td><td>_id, user_id, chemistry_type, nominal_capacity, measured_capacity, cycle_count, internal_resistance, age, manufacturer, created_at</td><td>Batarya veri kayitlari</td></tr>
+      <tr><td>analyses</td><td>_id, user_id, battery_id, soh, rul, tus, eus, general_score, net_gain, roi, ai_recommendation, status, version, created_at</td><td>Analiz sonuclari</td></tr>
+      <tr><td>reports</td><td>_id, analysis_id, user_id, format, file_path, created_at</td><td>Olusturulan rapor dosyalari</td></tr>
+      <tr><td>subscriptions</td><td>_id, user_id, tier, start_date, end_date, status, payment_ref</td><td>Abonelik bilgileri</td></tr>
+      <tr><td>audit_logs</td><td>_id, user_id, action, resource_type, resource_id, before_value, after_value, ip_address, timestamp</td><td>Denetim kayitlari</td></tr>
+      <tr><td>ai_interaction_logs</td><td>_id, analysis_id, prompt, response, model, tokens_used, latency_ms, timestamp</td><td>AI API iletisim gecmisi</td></tr>
+      <tr><td>battery_chemistry_profiles</td><td>_id, chemistry_type, k_range_min, k_range_max, typical_resistance, max_cycles, threshold_soh</td><td>Kimya tipi referans verileri</td></tr>
+      <tr><td>comparison_sets</td><td>_id, user_id, analysis_ids, name, created_at</td><td>Karsilastirma setleri</td></tr>
+      <tr><td>notifications</td><td>_id, user_id, type, title, message, read, created_at</td><td>Kullanici bildirimleri</td></tr>
+      <tr><td>system_config</td><td>_id, key, value, updated_at, updated_by</td><td>Sistem yapilandirmasi</td></tr>
+    </table>
+
+    <h3>9.2 Iliskiler</h3>
+    <pre><code class="language-mermaid">
+erDiagram
+    users ||--o{ batteries : "sahiptir"
+    users ||--o{ analyses : "yapar"
+    batteries ||--o{ analyses : "analiz edilir"
+    analyses ||--o{ reports : "rapor uretir"
+    users ||--|| subscriptions : "abone olur"
+    users ||--o{ audit_logs : "kaydedilir"
+    analyses ||--o{ ai_interaction_logs : "AI cagrisi"
+    </code></pre>
+
+    <h3>9.3 Indeksler</h3>
+    <table>
+      <tr><th>Koleksiyon</th><th>Indeks</th><th>Tur</th><th>Gerekce</th></tr>
+      <tr><td>users</td><td>{email: 1}</td><td>Tekil (Unique)</td><td>Giris ve e-posta arama performansi</td></tr>
+      <tr><td>batteries</td><td>{user_id: 1, created_at: -1}</td><td>Bilesk (Compound)</td><td>Kullanicinin bataryalarini tarihe gore listeleme</td></tr>
+      <tr><td>analyses</td><td>{user_id: 1, created_at: -1}</td><td>Bilesk</td><td>Kullanicinin analizlerini tarihe gore listeleme</td></tr>
+      <tr><td>analyses</td><td>{battery_id: 1}</td><td>Tekli</td><td>Bataryaya ait analizleri bulma</td></tr>
+      <tr><td>audit_logs</td><td>{timestamp: 1}</td><td>TTL (30 gun)</td><td>Otomatik silme ile veri yasam dongusu</td></tr>
+      <tr><td>ai_interaction_logs</td><td>{timestamp: 1}</td><td>TTL (90 gun)</td><td>AI log saklama suresi</td></tr>
+    </table>
+
+    <h3>9.4 Veri Yasam Dongusu ve Saklama</h3>
+    <table>
+      <tr><th>Veri Tipi</th><th>Aktif Saklama</th><th>Arsiv</th><th>Silme</th></tr>
+      <tr><td>Kullanici verileri</td><td>Hesap aktif oldugu surece</td><td>Hesap kapatildiktan 30 gun sonra</td><td>KVKK talebi uzerine</td></tr>
+      <tr><td>Analiz sonuclari</td><td>Surekli (ucretsiz: 50 adet limit)</td><td>1 yil sonra soguk depolamaya</td><td>Kullanici talebi uzerine</td></tr>
+      <tr><td>Denetim kayitlari</td><td>30 gun</td><td>1 yil</td><td>Yasal zorunluluk sonrasi</td></tr>
+      <tr><td>AI logllari</td><td>90 gun</td><td>Yok</td><td>TTL ile otomatik</td></tr>
+    </table>
+
+    <h3>9.5 Yedekleme Stratejisi</h3>
+    <ul>
+      <li>Gunluk otomatik yedekleme (mongodump veya MongoDB Atlas otomatik yedekleme)</li>
+      <li>Noktasal geri yukleme (point-in-time recovery) destegi</li>
+      <li>Yedeklerin farkli cografi bolgede saklanmasi</li>
+      <li>Aylik yedekleme geri yukleme testi</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BOLUM 10: KIMLIK DOGRULAMA -->
+<section id="section-10">
+  <div class="container">
+    <h2>10. Kimlik Dogrulama</h2>
+
+    <h3>10.1 Kayit ve Giris Akislari</h3>
+    <p><strong>Kayit:</strong> E-posta + sifre + ad &rarr; Sifre hashleme (Argon2id) &rarr; Veritabanina kayit &rarr; Dogrulama e-postasi gonder &rarr; E-posta dogrulama tokeni (24 saat gecerli)</p>
+    <p><strong>Giris:</strong> E-posta + sifre &rarr; Hiz siniri kontrolu (5 basarisiz deneme/15dk) &rarr; Sifre dogrulama &rarr; JWT access token (15dk) + refresh token (7 gun, httpOnly cookie)</p>
+    <p><strong>Sifre Sifirlama:</strong> E-posta gir &rarr; Sifirlama tokeni e-postala (1 saat gecerli) &rarr; Token ile yeni sifre belirle</p>
+
+    <h3>10.2 JWT Stratejisi</h3>
+    <table>
+      <tr><th>Token</th><th>Sure</th><th>Depolama</th><th>Yenileme</th></tr>
+      <tr><td>Access Token</td><td>15 dakika</td><td>Bellekte (JavaScript)</td><td>Refresh token ile otomatik</td></tr>
+      <tr><td>Refresh Token</td><td>7 gun</td><td>httpOnly, Secure, SameSite cookie</td><td>Rotasyon ile (her kullanildiginda yeni token)</td></tr>
+    </table>
+
+    <h3>10.3 Rol Sistemi</h3>
+    <table>
+      <tr><th>Rol</th><th>Aciklama</th></tr>
+      <tr><td>guest</td><td>Kayitssiz ziyaretci - sadece tanitim sayfalarini goruntuler</td></tr>
+      <tr><td>free_user</td><td>Ucretsiz uye - sinirli analiz hakki (ornegin 3/ay)</td></tr>
+      <tr><td>premium_user</td><td>Premium uye - tam analiz, disari aktarma, AI onerileri</td></tr>
+      <tr><td>enterprise_user</td><td>Kurumsal uye - toplu analiz, takim, API erisimi</td></tr>
+      <tr><td>researcher</td><td>Arastirmaci - ham veri erisimi, ozel modeller</td></tr>
+      <tr><td>admin</td><td>Yonetici - kullanici ve sistem yonetimi</td></tr>
+      <tr><td>super_admin</td><td>Ust yonetici - tam sistem erisimi</td></tr>
+    </table>
+
+    <h3>10.4 Izinler Matrisi</h3>
+    <table>
+      <tr><th>Izin</th><th>free</th><th>premium</th><th>enterprise</th><th>researcher</th><th>admin</th></tr>
+      <tr><td>Analiz olusturma</td><td>3/ay</td><td>Sinirssiz</td><td>Sinirssiz</td><td>Sinirssiz</td><td>Sinirssiz</td></tr>
+      <tr><td>Gecmis goruntuleme</td><td>Son 10</td><td>Tumu</td><td>Tumu</td><td>Tumu</td><td>Tumu</td></tr>
+      <tr><td>PDF disari aktarma</td><td>Hayir</td><td>Evet</td><td>Evet</td><td>Evet</td><td>Evet</td></tr>
+      <tr><td>AI onerisi</td><td>Hayir</td><td>Evet</td><td>Evet</td><td>Evet</td><td>Evet</td></tr>
+      <tr><td>Toplu analiz</td><td>Hayir</td><td>Hayir</td><td>Evet</td><td>Hayir</td><td>Evet</td></tr>
+      <tr><td>Ham veri erisimi</td><td>Hayir</td><td>Hayir</td><td>Hayir</td><td>Evet</td><td>Evet</td></tr>
+      <tr><td>Admin paneli</td><td>Hayir</td><td>Hayir</td><td>Hayir</td><td>Hayir</td><td>Evet</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- BOLUM 11: YAPAY ZEKA ENTEGRASYONU -->
+<section id="section-11">
+  <div class="container">
+    <h2>11. Yapay Zeka Entegrasyonu</h2>
+
+    <h3>11.1 Gonderilecek Veriler</h3>
+    <ul>
+      <li>SoH degeri, RUL tahmini, TUS skoru, EUS skoru</li>
+      <li>Batarya kimya tipi, yasi, dongu sayisi</li>
+      <li>Hedef proje tipi ve konum bilgisi</li>
+      <li>Yapilandirilmis JSON formatinda</li>
+    </ul>
+
+    <h3>11.2 ASLA Gonderilmemesi Gereken Veriler</h3>
+    <ul>
+      <li>Kullanici kisisel bilgileri (ad, e-posta, adres)</li>
+      <li>Kimlik dogrulama tokenlari</li>
+      <li>Dahili sistem kimlikleri ve veritabani sorgusu</li>
+      <li>Fiyatlandirma/faturalandirma verileri</li>
+      <li>Diger kullanicilarin verileri</li>
+    </ul>
+
+    <h3>11.3 Prompt Stratejisi</h3>
+    <p>Sistem istemi batarya domain bilgisi, guvenlik kisitlari ve beklenen cikti formati (JSON) icerir. Kullanici verisi yapilandirilmis olarak enjekte edilir. Az-atisli (few-shot) ornekler ile beklenen cikti gosterilir.</p>
+
+    <h3>11.4 Halusinasyon Onleme ve Maliyet</h3>
+    <ul>
+      <li>Yanitlar hesaplanmis verilere karsi dogrulanir</li>
+      <li>Guvenlik kisitlarina aykiri oneriler reddedilir</li>
+      <li>Benzer batarya profilleri icin yanit onbellekleme (Redis, TTL: 24 saat)</li>
+      <li>Basit oneriler icin daha ucuz modeller, karmasik icin premium modeller</li>
+      <li>AI kullanilamazsa kural tabanli yedek oneri sistemi devreye girer</li>
+    </ul>
+
+    <h3>11.5 Gelecek: Yerel AI</h3>
+    <p>Llama, Mistral gibi acik kaynak modellerin yerlestirme oncesinde domain-ozel ince ayar (fine-tune) yapilarak, API bagimliligini azaltma ve veri gizliligini artirma planlanmaktadir.</p>
+  </div>
+</section>
+
+<!-- BOLUM 12: GUVENLIK -->
+<section id="section-12">
+  <div class="container">
+    <h2>12. Guvenlik</h2>
+
+    <h3>12.1 Tehdit Modeli</h3>
+    <table>
+      <tr><th>Tehdit</th><th>Risk Seviyesi</th><th>Onlem</th></tr>
+      <tr><td>Kaba kuvvet saldirisi (Brute Force)</td><td>Yuksek</td><td>Hiz siniri (5/15dk), hesap kilitleme, CAPTCHA</td></tr>
+      <tr><td>NoSQL enjeksiyonu</td><td>Orta</td><td>Prisma ORM parametreli sorgular, girdi sanitizasyonu</td></tr>
+      <tr><td>XSS</td><td>Orta</td><td>React otomatik kacirma, CSP baslik-lari</td></tr>
+      <tr><td>CSRF</td><td>Orta</td><td>SameSite cookie, CSRF token</td></tr>
+      <tr><td>API kotuye kullanimi</td><td>Yuksek</td><td>Katmanli hiz siniri, WAF, DDoS korumasi</td></tr>
+      <tr><td>AI Prompt enjeksiyonu</td><td>Orta</td><td>Girdi temizleme, sistem istemi izolasyonu, cikti dogrulama</td></tr>
+      <tr><td>Veri ihlali</td><td>Kritik</td><td>Sifreleme (TLS 1.3, AES-256), erisim kontrolu, denetim izi</td></tr>
+    </table>
+
+    <h3>12.2 Hiz Sinirlamasi</h3>
+    <table>
+      <tr><th>Katman</th><th>Limit</th></tr>
+      <tr><td>Ucretsiz kullanici</td><td>10 istek/saat</td></tr>
+      <tr><td>Premium kullanici</td><td>100 istek/saat</td></tr>
+      <tr><td>Kurumsal kullanici</td><td>1000 istek/saat</td></tr>
+      <tr><td>Giris denemesi</td><td>5 deneme/15 dakika/IP</td></tr>
+    </table>
+
+    <h3>12.3 Girdi Dogrulama Araliklari</h3>
+    <p>Kapasite: 0.1-1000 Ah, Dongu: 0-50.000, Ic direnc: 0.001-10 ohm, Kimya tipi: LFP|NMC|NCA (beyaz liste)</p>
+
+    <h3>12.4 OWASP Top 10 Eslemesi</h3>
+    <table>
+      <tr><th>OWASP Riski</th><th>Proje Onlemi</th></tr>
+      <tr><td>A01: Bozuk Erisim Kontrolu</td><td>RBAC middleware, kaynak sahipligi kontrolu</td></tr>
+      <tr><td>A02: Kriptografik Hatalar</td><td>Argon2id sifre hashleme, TLS 1.3, AES-256</td></tr>
+      <tr><td>A03: Enjeksiyon</td><td>Prisma ORM, Pydantic dogrulama</td></tr>
+      <tr><td>A04: Guvenli Olmayan Tasarim</td><td>Tehdit modelleme, savunma derinligi</td></tr>
+      <tr><td>A05: Guvenlik Yapilandirmasi</td><td>Ortam degiskenleri, gizli anahtar yonetimi</td></tr>
+      <tr><td>A06: Savunmasiz Bilesenler</td><td>Dependabot, duzenli bagiml-ilik guncelleme</td></tr>
+      <tr><td>A07: Kimlik ve Oturum Hatalari</td><td>JWT rotasyonu, httpOnly cookie</td></tr>
+      <tr><td>A08: Yazilim Butunlugu</td><td>CI/CD guvenlik taramasi, imzali goruntuler</td></tr>
+      <tr><td>A09: Loglama Hatalari</td><td>Yapisal loglama, merkezi toplama, uyari sistemi</td></tr>
+      <tr><td>A10: SSRF</td><td>Cikis filtreleme, ic ag erisim kisitlamasi</td></tr>
+    </table>
+
+    <h3>12.5 KVKK/GDPR</h3>
+    <p>Veri isleme onayit, silme hakki, veri tasinabilirligi, gizlilik odakli tasarim (privacy by design), veri minimizasyonu ilkeleri uygulanmalidir.</p>
+  </div>
+</section>
+
+<!-- BOLUM 13: PERFORMANS -->
+<section id="section-13">
+  <div class="container">
+    <h2>13. Performans</h2>
+
+    <h3>13.1 Onbellekleme Stratejisi</h3>
+    <table>
+      <tr><th>Veri</th><th>Onbellek</th><th>TTL</th><th>Gecersiz Kilma</th></tr>
+      <tr><td>Oturumlar</td><td>Redis</td><td>15 dakika</td><td>Cikis yapildiginda</td></tr>
+      <tr><td>Analiz sonuclari</td><td>Redis</td><td>1 saat</td><td>Yeni analiz yapildiginda</td></tr>
+      <tr><td>AI yanitlari</td><td>Redis</td><td>24 saat</td><td>Benzerlik esigi ile</td></tr>
+      <tr><td>Kimya profilleri</td><td>Redis</td><td>7 gun</td><td>Profil guncellendiginde</td></tr>
+    </table>
+
+    <h3>13.2 Beklenen Darbogazlar ve Cozumler</h3>
+    <table>
+      <tr><th>Darbo-gaz</th><th>Beklenen Gecikme</th><th>Cozum</th></tr>
+      <tr><td>AI API cagrisi</td><td>2-10 saniye</td><td>Arka plan isleme, onbellekleme</td></tr>
+      <tr><td>Toplu analiz (100+ batarya)</td><td>30+ saniye</td><td>Celery kuyrugu, ilerleme takibi</td></tr>
+      <tr><td>PDF rapor uretimi</td><td>3-5 saniye</td><td>Arka plan isleme, bildirim ile teslim</td></tr>
+      <tr><td>Dashboard agregasyon</td><td>1-3 saniye</td><td>Onbellek, onceden hesaplanmis metrikler</td></tr>
+    </table>
+
+    <h3>13.3 Olceklendirme</h3>
+    <ul>
+      <li>FastAPI: Uvicorn iscileri yatay cogaltma (4-8 isci/sunucu)</li>
+      <li>MongoDB: Replica set (1 birincil + 2 ikincil), okuma dagilimi</li>
+      <li>Redis: Cluster modu, yuk dagilimi</li>
+      <li>Celery: Bagimsiz isci sayisi artirma</li>
+      <li>Next.js: CDN ve ISR ile statik icerik optimizasyonu</li>
+    </ul>
+
+    <h3>13.4 Yuk Testi Hedefleri</h3>
+    <table>
+      <tr><th>Metrik</th><th>Hedef</th></tr>
+      <tr><td>Tekil analiz yanit suresi</td><td>&lt; 2 saniye (AI haric)</td></tr>
+      <tr><td>Es zamanli kullanici</td><td>100+ (baslangic)</td></tr>
+      <tr><td>API hata orani</td><td>&lt; %0.1</td></tr>
+      <tr><td>Sayfa yukleme suresi</td><td>&lt; 3 saniye</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- BOLUM 14: DEVOPS -->
+<section id="section-14">
+  <div class="container">
+    <h2>14. DevOps</h2>
+
+    <h3>14.1 Gelistirme Is Akisi</h3>
+    <p>
+      <span class="flow-step">Yerel Gelistirme</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Feature Branch</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Pull Request</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Kod Incelemesi</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">CI Pipeline</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Staging</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-step">Uretim</span>
+    </p>
+
+    <h3>14.2 Dal Stratejisi (GitFlow)</h3>
+    <table>
+      <tr><th>Dal</th><th>Amac</th></tr>
+      <tr><td>main</td><td>Uretim kodu, her zaman yayinlanabilir</td></tr>
+      <tr><td>develop</td><td>Gelistirme entegrasyonu</td></tr>
+      <tr><td>feature/*</td><td>Yeni ozellikler</td></tr>
+      <tr><td>bugfix/*</td><td>Hata duzelttmeleri</td></tr>
+      <tr><td>release/*</td><td>Yayin hazirligi</td></tr>
+      <tr><td>hotfix/*</td><td>Acil uretim duzelttmeleri</td></tr>
+    </table>
+
+    <h3>14.3 Test Stratejisi</h3>
+    <table>
+      <tr><th>Tur</th><th>Arac</th><th>Kapsam</th></tr>
+      <tr><td>Birim Testi</td><td>pytest (Python), Jest (Next.js)</td><td>Her fonksiyon ve modul</td></tr>
+      <tr><td>Entegrasyon Testi</td><td>httpx (API), Prisma test</td><td>API endpoint'leri, veritabani</td></tr>
+      <tr><td>Uctan Uca Test</td><td>Playwright</td><td>Kullanici akislari</td></tr>
+      <tr><td>Yuk Testi</td><td>k6 veya Locust</td><td>Performans ve olcek testi</td></tr>
+      <tr><td>Guvenlik Testi</td><td>OWASP ZAP</td><td>Zafiyet taramasi</td></tr>
+    </table>
+
+    <h3>14.4 CI/CD Pipeline (GitHub Actions)</h3>
+    <p>Ayri pipeline'lar: Frontend (lint &rarr; test &rarr; build &rarr; deploy), Backend (lint &rarr; test &rarr; build &rarr; deploy), Analiz Motoru (lint &rarr; test &rarr; paket yayinla)</p>
+
+    <h3>14.5 Dagitim ve Izleme</h3>
+    <ul>
+      <li><strong>Konteyner:</strong> Docker imajlari, docker-compose (gelistirme), Kubernetes (uretim)</li>
+      <li><strong>Ortamlar:</strong> development, staging, production, preview (PR basina)</li>
+      <li><strong>Izleme:</strong> Prometheus + Grafana, saglik kontrolu endpoint'leri</li>
+      <li><strong>Loglama:</strong> Yapisal JSON, ELK veya Loki+Grafana, korelasyon kimligi (correlation ID)</li>
+      <li><strong>Yedekleme:</strong> MongoDB otomatik yedekleme, aylik geri yukleme testi</li>
+      <li><strong>Felaket Kurtarma:</strong> RTO &lt; 4 saat, RPO &lt; 1 saat</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BOLUM 15: PROJE YOL HARITASI -->
+<section id="section-15">
+  <div class="container">
+    <h2>15. Proje Yol Haritasi</h2>
+
+    <table>
+      <tr><th>Faz</th><th>Ad</th><th>Temel Gorevler</th><th>Ciktilar</th><th>Bagimlilik</th><th>Karmasiklik</th></tr>
+      <tr><td>0</td><td>Arastirma</td><td>Literatur taramasi, rakip analizi, teknoloji yigini dogrulama, formul validasyonu</td><td>Arastirma raporu, dogrulanmis formuller</td><td>-</td><td>Dusuk-Orta</td></tr>
+      <tr><td>1</td><td>Mimari</td><td>Sistem tasarimi, veritabani tasarimi, API sozlesmeleri (OpenAPI), tel cerceve (wireframe)</td><td>Mimari belge, API sartnamesi, tel cerceveler</td><td>Faz 0</td><td>Orta</td></tr>
+      <tr><td>2</td><td>Backend Temel</td><td>Kimlik dogrulama, kullanici yonetimi, temel API yapisi, veritabani kurulumu</td><td>Calisan auth, CRUD, API iskeleti</td><td>Faz 1</td><td>Yuksek</td></tr>
+      <tr><td>3</td><td>Analiz Motoru</td><td>Tum matematiksel modeller, formul dogrulama, birim testleri, kenar durum yonetimi</td><td>Test edilmis analiz motoru paketi</td><td>Faz 0, 1</td><td>Cok Yuksek</td></tr>
+      <tr><td>4</td><td>Frontend Temel</td><td>Tum sayfalar, formlar, layout, navigasyon, grafik bilesenleri</td><td>Sahte veri ile calisan arayuz</td><td>Faz 1, 2</td><td>Yuksek</td></tr>
+      <tr><td>5</td><td>Entegrasyon</td><td>Frontend-Backend, analiz motoru, AI API entegrasyonu</td><td>Tam calisan entegre sistem</td><td>Faz 2, 3, 4</td><td>Yuksek</td></tr>
+      <tr><td>6</td><td>Test</td><td>Birim, entegrasyon, uctan uca, guvenlik, performans testi</td><td>Test raporlari, guvenlik denetim raporu</td><td>Faz 5</td><td>Orta-Yuksek</td></tr>
+      <tr><td>7</td><td>Beta</td><td>Beta dagitim, kullanici alis-tirmasi, geri bildirim, hata duzeltme</td><td>Beta surumu, geri bildirim raporu</td><td>Faz 6</td><td>Orta</td></tr>
+      <tr><td>8</td><td>Uretim</td><td>Uretim dagitimi, izleme kurulumu, dokumantasyon, lansman</td><td>Uretim sistemi, kullanim kilavuzu</td><td>Faz 7</td><td>Orta</td></tr>
+    </table>
+
+    <div class="alert alert-info">
+      <strong>Not:</strong> Faz 3 (Analiz Motoru) en yuksek karmasikliga sahiptir ve projenin basarisini dogrudan etkiler. Formul hatalarinin duzeltilmesi ve EUS tanimlamasi bu fazda tamamlanmalidir.
+    </div>
+  </div>
+</section>
+
+<!-- BOLUM 16: RISK ANALIZI -->
+<section id="section-16">
+  <div class="container">
+    <h2>16. Risk Analizi</h2>
+
+    <h3>16.1 Risk Matrisi</h3>
+    <table class="risk-matrix">
+      <tr><th></th><th>Dusuk Etki</th><th>Orta Etki</th><th>Yuksek Etki</th><th>Kritik Etki</th></tr>
+      <tr><th>Yuksek Olasilik</th><td class="risk-medium">-</td><td class="risk-high">Veri kalitesi sorunlari</td><td class="risk-high">Dogrusal model yetersizligi</td><td class="risk-high">Formul hatalari (duzeltilmezse)</td></tr>
+      <tr><th>Orta Olasilik</th><td class="risk-low">-</td><td class="risk-medium">Pazar benimseme</td><td class="risk-high">AI API guvenilirligi</td><td class="risk-high">Guvenlik ihlali</td></tr>
+      <tr><th>Dusuk Olasilik</th><td class="risk-low">Bagimlilik guncellemeleri</td><td class="risk-low">Prisma+MongoDB uyumu</td><td class="risk-medium">Hukuki sorumluluk</td><td class="risk-medium">Yanlis batarya onerisi (guvenlik)</td></tr>
+    </table>
+
+    <h3>16.2 Detayli Risk Tablosu</h3>
+    <table>
+      <tr><th>Kategori</th><th>Risk</th><th>Olasilik</th><th>Etki</th><th>Azaltma Stratejisi</th></tr>
+      <tr><td>Teknik</td><td>Dogrusal bozunma modeli yetersizligi</td><td>Yuksek</td><td>Yuksek</td><td>Faz 0'da model karsilastirmasi, yari-ampirik modele gecis plani</td></tr>
+      <tr><td>Teknik</td><td>RUL ve Net Kazanc formul hatalari</td><td>Yuksek</td><td>Kritik</td><td>Implementasyon oncesinde duzeltme ZORUNLU</td></tr>
+      <tr><td>Teknik</td><td>EUS formuluie tanimsiz</td><td>Yuksek</td><td>Kritik</td><td>Faz 0'da tanimlama ve uzman dogrulama</td></tr>
+      <tr><td>Teknik</td><td>Prisma+MongoDB sinirli uyum</td><td>Orta</td><td>Orta</td><td>Karmasik sorgularda dogrudan MongoDB surucusu kullanimi</td></tr>
+      <tr><td>Teknik</td><td>AI API erisile-bilirlik kesintisi</td><td>Orta</td><td>Yuksek</td><td>Kural tabanli yedek sistem, yanit onbellekleme</td></tr>
+      <tr><td>Is</td><td>Pazar benimseme oraninin dusuk kalmasi</td><td>Orta</td><td>Orta</td><td>Freemium model, hedefli B2B pazarlama</td></tr>
+      <tr><td>Is</td><td>Rekabet (BatPaC, EverBatt gibi araclar)</td><td>Orta</td><td>Orta</td><td>Kullanici dostu arayuz ve AI onerisi ile farklilasma</td></tr>
+      <tr><td>Guvenlik</td><td>Veri ihlali</td><td>Dusuk</td><td>Kritik</td><td>Sifreleme, erisim kontrolu, guvenlik denetimi</td></tr>
+      <tr><td>Guvenlik</td><td>AI prompt enjeksiyonu</td><td>Orta</td><td>Orta</td><td>Girdi temizleme, sistem istemi izolasyonu</td></tr>
+      <tr><td>Bilimsel</td><td>SoH olcum belirsizligi</td><td>Yuksek</td><td>Orta</td><td>Belirsizlik araliklari ekleme, uyari mekanizmasi</td></tr>
+      <tr><td>Veri</td><td>Dusuk veri kalitesi</td><td>Yuksek</td><td>Orta</td><td>Kapsamli girdi dogrulama, makul deger kontrolleri</td></tr>
+      <tr><td>Hukuki</td><td>Yanlis oneri kaynaklii guvenlik riski</td><td>Dusuk</td><td>Kritik</td><td>Sorumluluk reddi beyani, guvenlik kisitlari, uzman dogrulama</td></tr>
+      <tr><td>Hukuki</td><td>KVKK/GDPR uyumsuzlugu</td><td>Orta</td><td>Yuksek</td><td>Gizlilik odakli tasarim, veri isleme onayit</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- BOLUM 17: EKSIK KISIMLAR -->
+<section id="section-17">
+  <div class="container">
+    <h2>17. PDF'deki Eksik Kisimlar</h2>
+    <p>Spesifikasyon belgesinin incelenmesi sonucunda, implementasyon oncesinde tanimlanmasi gereken onemli eksiklikler tespit edilmistir.</p>
+
+    <h3>17.1 Eksik Hesaplamalar (Kritik)</h3>
+    <table>
+      <tr><th>Eksiklik</th><th>Onemi</th><th>Yapilmasi Gereken</th></tr>
+      <tr><td>EUS formuluie tanimsiz</td><td>Genel skor hesaplanamaz</td><td>Net Kazanc ve ROI'den normalizasyonlu EUS tanimlanmali</td></tr>
+      <tr><td>RUL formuluinde isaret hatasi</td><td>Yanlis sonuc uretr</td><td>(C_mevcut - C_esik) / (k*C0) olarak duzeltilmeli</td></tr>
+      <tr><td>Net Kazanc formuluinde isaret hatasi</td><td>Maliyet gelire ekleniyor</td><td>Maliyet cikarilmali: E*P - M</td></tr>
+      <tr><td>Agirlik katsayilari belirtilmemis</td><td>TUS ve Genel Skor keyfi olur</td><td>w1/w2/w3 ve alpha/beta degerleri belirlenmeli</td></tr>
+      <tr><td>Normalizasyon yontemi belirtilmemis</td><td>TUS bilesenleri karsilastirillamaz</td><td>Min-max veya z-score normalizasyonu secilmeli</td></tr>
+      <tr><td>Kimyaya ozel k katsayilari yok</td><td>Bozunma modeli calistirilamaz</td><td>Literaturden LFP/NMC/NCA icin k degerleri belirlenmeli</td></tr>
+    </table>
+
+    <h3>17.2 Eksik Gereksinimler</h3>
+    <ul>
+      <li>Kullanici rol tanimlari detaylandirilmamis</li>
+      <li>Abonelik katmanlari ve fiyatlandirma belirtilmemis</li>
+      <li>API hiz sinirlari tanimlanmamis</li>
+      <li>Performans gereksinimleri (yanit suresi hedefleri) yok</li>
+      <li>SLA tanimlari yok</li>
+      <li>Veri saklama politikalari yok</li>
+    </ul>
+
+    <h3>17.3 Eksik Is Akislari</h3>
+    <ul>
+      <li>Kayit akisi detaylandirilmamis</li>
+      <li>Sifre sifirlama akisi yok</li>
+      <li>Admin is akislari tanimlanmamis</li>
+      <li>Toplu analiz akisi yok</li>
+      <li>Rapor olusturma akisi yok</li>
+    </ul>
+
+    <h3>17.4 Eksik Teknik Sartnameler</h3>
+    <ul>
+      <li>API sozlesmeleri (endpoint listesi, istek/yanit formatlari) yok</li>
+      <li>Hata yonetim standartlari yok</li>
+      <li>Veritabani semasi tanimlanmamis</li>
+      <li>Onbellekleme stratejisi yok</li>
+      <li>Dagitim plani yok</li>
+      <li>Izleme ve loglama plani yok</li>
+    </ul>
+
+    <h3>17.5 Eksik AI ve Guvenlik Detaylari</h3>
+    <ul>
+      <li>LLM model secimi belirtilmemis (GPT-4, Claude, Gemini vb.)</li>
+      <li>Prompt sablonlari tanimlanmamis</li>
+      <li>AI yedek stratejisi yok</li>
+      <li>Maliyet butcesi yok</li>
+      <li>Kimlik dogrulama mekanizmasi belirlenmemis</li>
+      <li>Sifreleme gereksinimleri yok</li>
+      <li>Denetim gereksinimleri yok</li>
+      <li>Uyumluluk gereksinimleri (KVKK) yok</li>
+    </ul>
+
+    <div class="alert alert-warning">
+      <strong>Oneri:</strong> Yukaridaki tum eksiklikler, implementasyona baslamadan once ele alinmali ve dokumante edilmelidir. Ozellikle formul hatalari ve EUS tanvimsizligi, projenin temel islevselligini dogrudan etkileyen kritik konulardir.
+    </div>
+  </div>
+</section>
+
+<!-- BOLUM 18: SON ONERILER -->
+<section id="section-18">
+  <div class="container">
+    <h2>18. Son Oneriler</h2>
+
+    <h3>18.1 Mimari Oneriler</h3>
+    <ul>
+      <li>Asenkron isleme icin mesaj kuyrugu (RabbitMQ veya Redis Streams) kullanimi</li>
+      <li>Analiz motorunun gun birinden itibaren bagimsiz mikro servis olarak tasarlanmasi</li>
+      <li>Bildirimler icin olay temelli (event-driven) mimari</li>
+      <li>REST'e ek olarak karmasik sorgular icin GraphQL degerlendirmesi</li>
+    </ul>
+
+    <h3>18.2 Teknik Oneriler</h3>
+    <ul>
+      <li>Redis: onbellekleme + oturum deposu + gorev kuyrugu</li>
+      <li>AI cagilari icin devre kesici (circuit breaker) deseni</li>
+      <li>Pydantic ile tum dogrulama islemleri</li>
+      <li>Zaman serisi batarya verisi icin MongoDB'ye ek olarak InfluxDB/TimescaleDB degerlendirmesi</li>
+      <li>MongoDB semaa degisiklikleri icin migrasyon araci</li>
+    </ul>
+
+    <h3>18.3 Urun Onerileri</h3>
+    <ul>
+      <li>Freemium model ile basla (ayda 3 ucretsiz analiz)</li>
+      <li>Ilk olarak BESS kullanim senaryosuna odaklan (en buyuk pazar)</li>
+      <li>Karsilastirma ozelligini erken asama-da gelistir (farklilastirici deger)</li>
+      <li>Gelecekte ikincil batarya pazar yeri ekle</li>
+    </ul>
+
+    <h3>18.4 UX Onerileri</h3>
+    <ul>
+      <li>Adim adim sihirbaz yapisiyla batarya veri girisi</li>
+      <li>Etkilesimli ve animasyonlu grafikler (Recharts veya Chart.js)</li>
+      <li>Markalanmis PDF raporlar</li>
+      <li>Karanlik mod ilk gunce-den</li>
+      <li>Iskelet yukleme durumlari</li>
+    </ul>
+
+    <h3>18.5 Oncelik Sirasi</h3>
+    <ol>
+      <li>Formul hatalarini duzelt ve EUS tanimla</li>
+      <li>Kimlik dogrulama sistemi</li>
+      <li>Batarya veri girisi ve temel analiz</li>
+      <li>Rapor olusturma</li>
+      <li>Yapay zeka onerileri</li>
+      <li>Karsilastirma</li>
+      <li>Gecmis ve disari aktarma</li>
+      <li>Kurumsal ozellikler</li>
+      <li>Arastirma ozellikleri</li>
+    </ol>
+
+    <h3>18.6 Kritik Konular</h3>
+    <div class="alert alert-danger">
+      <strong>Implementasyon Oncesinde MUTLAKA Cozulmesi Gerekenler</strong>
+      <ul>
+        <li>RUL ve Net Kazanc formullerindeki isaret hatalari duzeltilmeli</li>
+        <li>EUS formuluie tanimlanmali</li>
+        <li>TUS bilesen normalizasyonu uygulanmali</li>
+        <li>Kimyaya ozel bozunma katsayilari literaturden belirlenmeli</li>
+        <li>AI guvenlik kisitlari tanimlanmali (hangi oneriler reddedilmeli)</li>
+      </ul>
+    </div>
+
+    <h3>18.7 Ek Teknoloji Onerileri</h3>
+    <p>Zorunlu yigin (Next.js, FastAPI, Python, MongoDB, Prisma ORM) diisnda mimariiyi guclendirecek ek teknolojiler:</p>
+    <table>
+      <tr><th>Teknoloji</th><th>Amac</th><th>Neden</th></tr>
+      <tr><td>Redis</td><td>Onbellek, oturum, gorev kuyrugu</td><td>Performans ve olceklenebilirlik</td></tr>
+      <tr><td>Celery</td><td>Arka plan gorev yonetimi</td><td>Agir hesaplamalar ve AI cagilari</td></tr>
+      <tr><td>Docker + Kubernetes</td><td>Konteyner orkestrasyonu</td><td>Dagitim tutarliligi ve olceklendirme</td></tr>
+      <tr><td>Prometheus + Grafana</td><td>Izleme ve gorsellestirme</td><td>Sistem sagligi ve performans takibi</td></tr>
+      <tr><td>Sentry</td><td>Hata izleme</td><td>Uretim hatalarinin hizli tespiti</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- SONUC -->
+<section id="conclusion">
+  <div class="container">
+    <h2>Sonuc</h2>
+
+    <p>ReLiOn platformu, kuresel olcekte buyuyen bir cevresel ve ekonomik soruna - lityum-iyon bataryalarin ikincil yasam potansiyelinin degerlendirilmesi - yenilikci ve erisilebi-lir bir cozum sunma potansiyeline sahiptir. 2030 yilina kadar 11 milyon tona ulasmasi ongoru-len atik batarya hacmi, bu tur bir karar destek sisteminin zamanlamasinin son derece uygun oldugunu gostermektedir. Platformun yerli ve dusuk maliyetli bir alternatif olarak konumlandirillmasi, hem ticari hem de stratejik acidan degerlidir.</p>
+
+    <p>Bu teknik planlama calismasi kapsaminda, spesifikasyon belgesindeki matematiksel modeller derinlemesine incelenmis ve birkac kritik sorun tespit edilmistir. RUL ve Net Kazanc formullerindeki isaret hatalari, EUS formuluinin tanimsizligi, TUS bilesenlerinin normalizasyon eksikligi ve dogrusal bozunma modelinin sinirlamalari, implementasyon oncesinde ele alinmasi gereken birincil oncelikli konulardir. Bu sorunlar cozulmeden sisteme baslamak, temel islevselligi riske atacaktir.</p>
+
+    <p>Onerilen teknoloji yigini (Next.js, FastAPI, Python, MongoDB, Prisma ORM) projenin teknik gereksinimlerini karsilayabilecek yeterliliktedir. FastAPI'nin yuksek performansi, Python analiz motoruyla dogal entegrasyonu ve MongoDB'nin esnek sema yapisi, bu proje icin uygun secimlerdir. Redis, Celery ve konteyner tabanli dagitim ile altyapi guclendirilmelidir.</p>
+
+    <p>Sonuc olarak, tespit edilen formul hatalari duzeltildikten, eksik tanimlamalar (EUS, agirlik katsayilari, normalizasyon yontemi) tamamlandiktan ve guvenlik/dogrulama gereksinimleri belirlendikten sonra, projenin implementasyon asamasina gecmesi uygun gorulmektedir. Dokuz fazli yol haritasi, projenin sistematik ve kontrolluh bir sekilde gelistirilmesini saglayacaktir. Analiz motorunun dogrulugu ve guvenilirligi, projenin basarisini belirleyen en kritik faktordur ve bu alanda ozel dikkat ve yatirim gerekmektedir.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>ReLiOn Teknik Planlama Raporu | Versiyon 1.0 | 13 Temmuz 2026</p>
+    <p>Bu belge yalnizca planlama amaciyla hazirlanmistir. Implementasyon kodu icermez.</p>
+  </div>
+</footer>
+
+</body>
+</html>
