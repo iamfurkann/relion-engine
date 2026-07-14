@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReLiOn Analiz Motoru Laboratuvarı</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root { --primary: #1a365d; --accent: #2b6cb0; --bg: #f7fafc; --border: #e2e8f0; --text: #2d3748; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+  header { background: var(--primary); color: white; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { margin: 0; font-size: 1.5rem; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; display: flex; gap: 2rem; }
+  
+  .sidebar { flex: 0 0 300px; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .sidebar h3 { margin-top: 0; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .form-group input, .form-group select { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; box-sizing: border-box; }
+  
+  .main-content { flex: 1; min-width: 0; }
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+  .tab { padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; }
+  .tab.active { border-bottom-color: var(--accent); color: var(--accent); }
+  .tab:hover { background: #edf2f7; }
+  
+  .panel { display: none; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .panel.active { display: block; }
+  
+  button.action-btn { background: var(--accent); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 1rem; }
+  button.action-btn:hover { background: #2c5282; }
+  
+  .trace-card { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 1rem; padding: 1rem; }
+  .trace-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+  .trace-header h4 { margin: 0; color: var(--primary); }
+  .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+  .badge-pass { background: #c6f6d5; color: #276749; }
+  .badge-fail { background: #fed7d7; color: #9b2c2c; }
+  
+  .code-block { background: #1a202c; color: #a0aec0; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem; overflow-x: auto; }
+  
+  table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.9rem; }
+  table.data-table th, table.data-table td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+  table.data-table th { background: #edf2f7; width: 30%; }
+  
+  .chart-container { height: 400px; width: 100%; margin-top: 2rem; }
+  
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .stat-box { border: 1px solid var(--border); padding: 1rem; border-radius: 6px; text-align: center; }
+  .stat-box .title { font-size: 0.8rem; color: #718096; text-transform: uppercase; }
+  .stat-box .value { font-size: 1.2rem; font-weight: bold; margin-top: 0.5rem; }
+  
+  .error-msg { background: #fed7d7; color: #9b2c2c; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ReLiOn Analiz Motoru Laboratuvarı</h1>
+  <div style="font-size: 0.9rem;">Mühendislik Doğrulama Ortamı</div>
+</header>
+
+<div class="container">
+  <!-- YAN MENÜ: Temel Parametreler -->
+  <div class="sidebar">
+    <h3>Temel Parametreler</h3>
+    <div style="font-size: 0.8rem; color: #718096; margin-bottom: 1rem;">Tüm testlerde baz alınacak değerler.</div>
+    
+    <div class="form-group">
+      <label>Kimya Türü</label>
+      <select id="p_chem"><option value="LFP">LFP</option><option value="NMC">NMC</option><option value="NCA">NCA</option></select>
+    </div>
+    <div class="form-group"><label>Nominal Kapasite (Ah)</label><input type="number" id="p_nom" value="100.0" step="0.1"></div>
+    <div class="form-group"><label>Mevcut Kapasite (Ah)</label><input type="number" id="p_meas" value="95.0" step="0.1"></div>
+    <div class="form-group"><label>Döngü Sayısı</label><input type="number" id="p_cyc" value="500"></div>
+    <div class="form-group"><label>İç Direnç (Ω)</label><input type="number" id="p_res" value="0.015" step="0.001"></div>
+    <div class="form-group"><label>Yaş (Yıl)</label><input type="number" id="p_age" value="2.0" step="0.1"></div>
+    
+    <h4 style="margin-bottom:0.5rem; margin-top:1.5rem;">Ekonomik Parametreler</h4>
+    <div class="form-group"><label>Toplam Enerji (kWh)</label><input type="number" id="p_egy" value="80000"></div>
+    <div class="form-group"><label>Enerji Fiyatı ($/kWh)</label><input type="number" id="p_prc" value="0.20" step="0.01"></div>
+    <div class="form-group"><label>Toplam Maliyet ($)</label><input type="number" id="p_cost" value="3000"></div>
+    <div class="form-group"><label>Yatırım Maliyeti ($)</label><input type="number" id="p_inv" value="1500"></div>
+    <div class="form-group"><label>Proje Ömrü (Yıl)</label><input type="number" id="p_life" value="10"></div>
+  </div>
+  
+  <!-- ANA İÇERİK -->
+  <div class="main-content">
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('tab-eval')">Formül İzleme</div>
+      <div class="tab" onclick="switchTab('tab-sens')">Duyarlılık Analizi</div>
+      <div class="tab" onclick="switchTab('tab-mc')">Monte Carlo</div>
+      <div class="tab" onclick="switchTab('tab-edge')">Kenar Durumlar (Edge Cases)</div>
+    </div>
+    
+    <div id="global-error" class="error-msg"></div>
+    
+    <!-- PANEL 1: Formül İzleme -->
+    <div id="tab-eval" class="panel active">
+      <h2>Derinlemesine Formül Değerlendirmesi</h2>
+      <p>Motoru çalıştırır ve ara adımları, kısıtları ve normalizasyonları adım adım doğrular.</p>
+      <button class="action-btn" style="width: auto;" onclick="runEvaluate()">İzlemeyi Başlat</button>
+      
+      <div id="eval-results" style="margin-top: 2rem;"></div>
+    </div>
+    
+    <!-- PANEL 2: Duyarlılık Analizi -->
+    <div id="tab-sens" class="panel">
+      <h2>Duyarlılık (Sensitivity) Analizi</h2>
+      <div style="display:flex; gap:1rem; align-items:flex-end; margin-bottom: 1.5rem;">
+        <div class="form-group" style="margin:0;">
+          <label>Taranacak Parametre</label>
+          <select id="sens_param">
+            <option value="battery.measured_capacity">Mevcut Kapasite</option>
+            <option value="battery.internal_resistance">İç Direnç</option>
+            <option value="economic.energy_price_per_kwh">Enerji Fiyatı</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0;"><label>Min Değer</label><input type="number" id="sens_min" value="80"></div>
+        <div class="form-group" style="margin:0;"><label>Max Değer</label><input type="number" id="sens_max" value="100"></div>
+        <div class="form-group" style="margin:0;"><label>Adım Sayısı</label><input type="number" id="sens_steps" value="20"></div>
+        <button class="action-btn" style="width: auto; margin:0;" onclick="runSensitivity()">Grafiği Oluştur</button>
+      </div>
+      <div class="chart-container"><canvas id="sensChart"></canvas></div>
+    </div>
+    
+    <!-- PANEL 3: Monte Carlo -->
+    <div id="tab-mc" class="panel">
+      <h2>Monte Carlo Belirsizlik Simülasyonu</h2>
+      <p>Kritik parametrelere Gaussian gürültü ekler (Kapasite %2, Direnç %5, Fiyat %5) ve %95 güven aralıklarını bulmak için 1.000 iterasyon çalıştırır.</p>
+      <button class="action-btn" style="width: auto;" onclick="runMonteCarlo()">1000 İterasyon Çalıştır</button>
+      
+      <div id="mc-stats" style="margin-top: 2rem; display: none;">
+        <h3>RUL (Kalan Ömür) İstatistikleri</h3>
+        <div class="stats-grid" id="stats-rul"></div>
+        <h3>TUS (Teknik Uygunluk Skoru) İstatistikleri</h3>
+        <div class="stats-grid" id="stats-tus"></div>
+        <h3>Net Kazanç İstatistikleri</h3>
+        <div class="stats-grid" id="stats-gain"></div>
+      </div>
+    </div>
+    
+    <!-- PANEL 4: Edge Cases -->
+    <div id="tab-edge" class="panel">
+      <h2>Kenar Durumlar (Edge Cases) ve Doğrulama Testleri</h2>
+      <p>Önceden tanımlanmış sınır testlerini doğrudan Bölüm 8 kısıtlarına göre çalıştırır.</p>
+      <button class="action-btn" style="width: auto;" onclick="runEdgeCases()">Testleri Başlat</button>
+      
+      <div id="edge-results" style="margin-top: 2rem;"></div>
+    </div>
+    
+  </div>
+</div>
+
+<script>
+function getBaseData() {
+  return {
+    battery: {
+      chemistry_type: document.getElementById('p_chem').value,
+      nominal_capacity: parseFloat(document.getElementById('p_nom').value),
+      measured_capacity: parseFloat(document.getElementById('p_meas').value),
+      cycle_count: parseInt(document.getElementById('p_cyc').value),
+      internal_resistance: parseFloat(document.getElementById('p_res').value),
+      age: parseFloat(document.getElementById('p_age').value),
+      usage_scenario: "BESS",
+      expected_lifetime_years: parseFloat(document.getElementById('p_life').value)
+    },
+    economic: {
+      total_energy_kwh: parseFloat(document.getElementById('p_egy').value),
+      energy_price_per_kwh: parseFloat(document.getElementById('p_prc').value),
+      total_cost: parseFloat(document.getElementById('p_cost').value),
+      investment_cost: parseFloat(document.getElementById('p_inv').value),
+      project_lifetime_years: parseFloat(document.getElementById('p_life').value)
+    }
+  };
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function showError(msg) {
+  const el = document.getElementById('global-error');
+  el.innerText = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 5000);
+}
+
+// 1. EVALUATE
+async function runEvaluate() {
+  const resDiv = document.getElementById('eval-results');
+  resDiv.innerHTML = "Çalıştırılıyor...";
+  try {
+    const res = await fetch('/api/lab/evaluate', {
+      method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(getBaseData())
+    });
+    const data = await res.json();
+    if(!data.success) { showError(data.error); resDiv.innerHTML=""; return; }
+    
+    let html = `<h3>Doğrulama Durumu: <span class="badge ${data.overall_match ? 'badge-pass' : 'badge-fail'}">${data.overall_match ? 'BAŞARILI (PASS)' : 'BAŞARISIZ (FAIL)'}</span></h3>`;
+    data.trace.forEach(t => {
+      let inputsHtml = Object.entries(t.inputs).map(([k,v]) => `<tr><th>${k}</th><td>${typeof v === 'number' ? v.toFixed(4) : v}</td></tr>`).join('');
+      let interHtml = Object.entries(t.intermediates).map(([k,v]) => `<tr><th>${k}</th><td>${typeof v === 'number' ? v.toFixed(4) : v}</td></tr>`).join('');
+      
+      html += `
+        <div class="trace-card">
+          <div class="trace-header">
+            <h4>${t.step}</h4>
+            <span class="badge ${t.match ? 'badge-pass' : 'badge-fail'}">${t.status}</span>
+          </div>
+          <div style="margin-bottom:1rem; font-family:monospace; font-weight:bold;">Formül: ${t.formula}</div>
+          <div style="display:flex; gap:1rem;">
+            <div style="flex:1;">
+              <strong>Girdiler (Inputs)</strong>
+              <table class="data-table">${inputsHtml || '<tr><td>Yok</td></tr>'}</table>
+            </div>
+            <div style="flex:1;">
+              <strong>Ara Değerler (Intermediates)</strong>
+              <table class="data-table">${interHtml || '<tr><td>Yok</td></tr>'}</table>
+            </div>
+          </div>
+          <div class="code-block">
+            Laboratuvar Sonucu (Lab): ${t.lab_result}
+            Motor Sonucu (Engine):    ${t.engine_result}
+            Delta (Fark):             ${Math.abs(t.lab_result - t.engine_result)}
+          </div>
+        </div>
+      `;
+    });
+    resDiv.innerHTML = html;
+  } catch(e) { showError(e.message); resDiv.innerHTML=""; }
+}
+
+// 2. SENSITIVITY
+let sensChartObj = null;
+async function runSensitivity() {
+  const [ptype, pval] = document.getElementById('sens_param').value.split('.');
+  const payload = {
+    ...getBaseData(),
+    sweep_param: pval,
+    param_type: ptype,
+    min_val: parseFloat(document.getElementById('sens_min').value),
+    max_val: parseFloat(document.getElementById('sens_max').value),
+    steps: parseInt(document.getElementById('sens_steps').value)
+  };
+  
+  try {
+    const res = await fetch('/api/lab/sensitivity', {
+      method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!data.success) { showError(data.error); return; }
+    
+    const validData = data.data.filter(d => d.valid);
+    const labels = validData.map(d => d[pval].toFixed(2));
+    const tus = validData.map(d => d.tus);
+    const score = validData.map(d => d.general_score);
+    
+    if(sensChartObj) sensChartObj.destroy();
+    const ctx = document.getElementById('sensChart').getContext('2d');
+    sensChartObj = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          { label: 'TUS Skoru', data: tus, borderColor: '#2b6cb0', fill: false, tension: 0.1 },
+          { label: 'Genel Skor', data: score, borderColor: '#276749', fill: false, tension: 0.1 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  } catch(e) { showError(e.message); }
+}
+
+// 3. MONTE CARLO
+async function runMonteCarlo() {
+  const statsDiv = document.getElementById('mc-stats');
+  statsDiv.style.display = 'none';
+  try {
+    const payload = { ...getBaseData(), iterations: 1000 };
+    const res = await fetch('/api/lab/monte_carlo', {
+      method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!data.success) { showError(data.error); return; }
+    
+    const drawStats = (id, st) => {
+      document.getElementById(id).innerHTML = `
+        <div class="stat-box"><div class="title">Ortalama (Mean)</div><div class="value">${st.mean.toFixed(2)}</div></div>
+        <div class="stat-box"><div class="title">Standart Sapma (σ)</div><div class="value">${st.stdev.toFixed(2)}</div></div>
+        <div class="stat-box"><div class="title">%5 Yüzdelik Dilim</div><div class="value">${st.p5.toFixed(2)}</div></div>
+        <div class="stat-box"><div class="title">%95 Yüzdelik Dilim</div><div class="value">${st.p95.toFixed(2)}</div></div>
+      `;
+    };
+    
+    drawStats('stats-rul', data.data.stats.rul);
+    drawStats('stats-tus', data.data.stats.tus);
+    drawStats('stats-gain', data.data.stats.net_gain);
+    
+    statsDiv.style.display = 'block';
+  } catch(e) { showError(e.message); }
+}
+
+// 4. EDGE CASES
+async function runEdgeCases() {
+  const resDiv = document.getElementById('edge-results');
+  resDiv.innerHTML = "Çalıştırılıyor...";
+  try {
+    const res = await fetch('/api/lab/edge_cases');
+    const data = await res.json();
+    if(!data.success) { showError(data.error); resDiv.innerHTML=""; return; }
+    
+    let html = '';
+    data.data.forEach(t => {
+      html += `
+        <div class="trace-card">
+          <div class="trace-header">
+            <h4>${t.name}</h4>
+            <span class="badge ${t.pass ? 'badge-pass' : 'badge-fail'}">${t.pass ? 'BAŞARILI' : 'BAŞARISIZ'}</span>
+          </div>
+          <p style="font-size: 0.9rem; margin-top:0;">${t.description}</p>
+          <div class="code-block">
+            Beklenen Durum (Expected): ${t.expected_status}
+            Gerçekleşen (Actual):      ${t.actual_status}
+            ${t.error_msg ? `Hata Mesajı:               ${t.error_msg}` : ''}
+          </div>
+        </div>
+      `;
+    });
+    resDiv.innerHTML = html;
+  } catch(e) { showError(e.message); resDiv.innerHTML=""; }
+}
+</script>
+</body>
+</html>
